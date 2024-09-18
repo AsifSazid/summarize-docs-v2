@@ -3,8 +3,8 @@
         <div class="container d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
             <div class="d-flex align-items-center mr-1">
                 <div class="dropdown dropdown-inline d-inline-block d-lg-none ml-2 mr-4">
-                    <a href="#" class="px-2 px-lg-5 mr-2" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
+                    <a href="#" class="px-2 px-lg-5 mr-2" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
                         <i class="fa-solid fa-ellipsis-vertical"></i>
                     </a>
                     <div class="dropdown-menu p-0 m-0 dropdown-menu-md dropdown-menu-right">
@@ -31,45 +31,47 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-baseline flex-wrap mr-5">
-                    <h2 class="d-flex align-items-center text-dark font-weight-bold my-1 mr-3">Title
+                    <h2 class="d-flex align-items-center text-dark font-weight-bold my-1 mr-3" id="chat-title">Title
                     </h2>
                 </div>
             </div>
             <div class="d-flex align-items-center flex-wrap">
-                <div class="dropdown dropdown-inline" data-toggle="tooltip" title=""
-                    data-placement="left" data-original-title="Quick actions">
-                    <a href="#" class="px-2 px-lg-5 mr-2" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <img class="symbol symbol-35px symbol-md-40px" style="border-radius: 50%;"
-                            src="{{ asset('assets') }}/media/users/100_12.jpg" alt="user"
-                            width="50" height="50" />
-                    </a>
-                    <div class="dropdown-menu p-0 m-0 dropdown-menu-md dropdown-menu-right">
-                        <!--begin::Navigation-->
-                        <ul class="navi navi-hover">
-                            <li class="navi-header font-weight-bold py-4">
-                                <div
-                                    class="user-identity d-sm-flex flex-column justify-content-center me-2 me-md-4">
-                                    <span class="fs-8 fw-bold lh-1"><strong>Asif M Sazid
-                                            Tappware</strong></span>
-                                    <span class="opacity-75 fs-8 lh-1 mb-1">GUEST</span>
-                                </div>
-                            </li>
-                            <li class="navi-header font-weight-bold py-4">
-                                <span class="font-size-lg">Settings</span>
-                            </li>
-                            <li class="navi-header font-weight-bold py-4">
-                                <span class="font-size-lg">Upgrade</span>
-                            </li>
-                            <li class="navi-header font-weight-bold py-4">
-                                <span class="font-size-lg">Logout</span>
-                            </li>
-                        </ul>
-                        <!--end::Navigation-->
+                @if (auth()->user())
+                    <div class="dropdown dropdown-inline" data-toggle="tooltip" title="" data-placement="left"
+                        data-original-title="Quick actions">
+                        <a href="#" class="px-2 px-lg-5 mr-2" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            <img class="symbol symbol-35px symbol-md-40px" style="border-radius: 50%;"
+                                src="{{ asset('assets') }}/media/users/100_12.jpg" alt="user" width="50"
+                                height="50" />
+                        </a>
+                        <div class="dropdown-menu p-0 m-0 dropdown-menu-md dropdown-menu-right">
+                            <!--begin::Navigation-->
+                            <ul class="navi navi-hover">
+                                <li class="navi-header font-weight-bold py-4">
+                                    <div
+                                        class="user-identity d-sm-flex flex-column justify-content-center me-2 me-md-4">
+                                        <span class="fs-8 fw-bold lh-1"><strong>Asif M Sazid
+                                                Tappware</strong></span>
+                                        <span class="opacity-75 fs-8 lh-1 mb-1">GUEST</span>
+                                    </div>
+                                </li>
+                                <li class="navi-header font-weight-bold py-4">
+                                    <span class="font-size-lg">Settings</span>
+                                </li>
+                                <li class="navi-header font-weight-bold py-4">
+                                    <span class="font-size-lg">Upgrade</span>
+                                </li>
+                                <li class="navi-header font-weight-bold py-4">
+                                    <span class="font-size-lg">Logout</span>
+                                </li>
+                            </ul>
+                            <!--end::Navigation-->
+                        </div>
                     </div>
-                </div>
-                <a href="#" class="btn btn-flex btn-sm fw-bold btn-dark py-3"
-                    data-bs-toggle="modal" data-bs-target="#kt_modal_upgrade_plan">Sign Up</a>
+                @else
+                    <a href="{{ route('register') }}" class="btn btn-flex btn-sm fw-bold btn-dark py-3">Sign Up</a>
+                @endif
             </div>
         </div>
     </div>
@@ -81,10 +83,9 @@
                 <div class="card-footer">
                     <form id="chat-form">
                         <div class="input-group">
-                            <input type="text" id="user-input" class="form-control"
-                                placeholder="Type a message..." required>
-                            <button class="btn btn-primary" type="submit"><i
-                                    class="fas fa-paper-plane"></i></button>
+                            <input type="text" id="user-input" class="form-control" placeholder="Type a message..."
+                                required>
+                            <button class="btn btn-primary" type="submit"><i class="fas fa-paper-plane"></i></button>
                         </div>
                     </form>
                 </div>
@@ -134,6 +135,7 @@
                 flex-direction: row;
                 float: left;
                 clear: both;
+                margin-top: 2%;
             }
 
             .user-message {
@@ -156,11 +158,11 @@
             .chat-text {
                 max-width: calc(100%);
                 word-wrap: break-word;
+                padding: 10px !important;
             }
 
             .user-message .chat-text {
                 background-color: #ececec;
-                padding: 10px !important;
                 border-radius: 1.5rem;
             }
 
@@ -253,6 +255,7 @@
             const fileDropArea = document.getElementById('file-upload');
             const fileInput = document.getElementById('fileInput');
             const responseBody = document.getElementById('responseBody');
+            const chatTitle = document.getElementById('chat-title');
 
             let extractDocText = '';
 
@@ -289,15 +292,37 @@
                 handleFiles(files);
             });
 
+            function titleChange(fileName) {
+                const fullTitle = `Summary of ${fileName}`;
+                let index = 0;
+
+                const typingInterval = setInterval(() => {
+                    if (index < fullTitle.length) {
+                        chatTitle.textContent += fullTitle.charAt(index);
+                        index++;
+                    } else {
+                        clearInterval(typingInterval); // Stop the typing effect once complete
+                    }
+                }, 50);
+            }
+
             // Function to handle files
             async function handleFiles(files) {
                 if (files.length > 0) {
                     try {
                         const file = files[0];
+                        const fileName = file.name;
+
+                        // Show the file name as a message in the user's chat bubble
+                        addMessage(`Uploaded file: ${file.name}`, 'user-message', 'user');
+
+                        // Proceed to upload and summarize the file
                         await summarizedTextResponse(file);
+
+                        titleChange(fileName);
                     } catch (error) {
                         console.error('Error:', error);
-                        const errorMessage = "Sorry, something went wrong while processing the file.";
+                        const errorMessage = "Sorry, something went wrong while processing the file. Please try again.";
                         simulateTypingEffect(errorMessage);
                     }
                 } else {
@@ -315,10 +340,10 @@
                     showTypingIndicator();
 
                     const response = await fetch(
-                    'http://192.168.10.185:8800/api/pdf_to_summary/', { // Replace with your API URL
-                        method: 'POST',
-                        body: formData
-                    });
+                        'http://192.168.10.185:8800/api/pdf_to_summary/', { // Replace with your API URL
+                            method: 'POST',
+                            body: formData
+                        });
 
                     removeTypingIndicator(); // Remove typing indicator once response is received
 
@@ -328,18 +353,20 @@
 
                     const result = await response.json();
                     extractDocText = result.extracted_text;
-                    // console.log(extractDocText);
-
 
                     console.log('PDF Summary Result:', result); // Debugging log
 
-                    // Simulate typing effect with actual summary
-                    simulateTypingEffect(result);
+                    // Check if there is a valid summary in the result, otherwise show an error message
+                    if (result.summary) {
+                        simulateTypingEffect(result);
+                    } else {
+                        simulateTypingEffect("Unable to summarize the document. Please try another file.");
+                    }
 
                 } catch (error) {
                     console.error('Error uploading file:', error);
                     removeTypingIndicator(); // Ensure the typing indicator is removed even on error
-                    const errorMessage = "Sorry, something went wrong while processing the file.";
+                    const errorMessage = "Sorry, something went wrong while processing the file. Please try again.";
                     simulateTypingEffect(errorMessage);
                 }
             }
@@ -373,18 +400,17 @@
                     showTypingIndicator();
 
                     try {
-
                         const response = await fetch(
-                        'http://192.168.10.185:8800/api/text_with_query/', { // Replace with your API URL
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                text: extractDocText,
-                                query: userMessage
-                            })
-                        });
+                            'http://192.168.10.185:8800/api/text_with_query/', { // Replace with your API URL
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    text: extractDocText,
+                                    query: userMessage
+                                })
+                            });
 
                         removeTypingIndicator(); // Remove the typing indicator once the response is received
 
@@ -392,21 +418,22 @@
                             throw new Error('Network response was not ok');
                         }
 
-                        console.log(response);
-
-
                         const result = await response.json();
                         console.log('Chat API Result:', result); // Debugging log
 
-                        const botResponse = result || 'No response from bot';
-
-                        // Simulate typing effect for bot response
-                        simulateTypingEffect(botResponse);
+                        // Check if the result contains a valid answer
+                        if (result.answer) {
+                            simulateTypingEffect(result);
+                        } else {
+                            simulateTypingEffect(
+                                "Sorry, I couldn't find an answer to your query. Please try again.");
+                        }
 
                     } catch (error) {
                         console.error('Error sending message:', error);
                         removeTypingIndicator(); // Remove typing indicator even on error
-                        const errorMessage = "Sorry, something went wrong while sending the message.";
+                        const errorMessage =
+                            "Sorry, something went wrong while sending the message. Please try again.";
                         simulateTypingEffect(errorMessage);
                     }
                 }
@@ -436,11 +463,11 @@
                 const typingDiv = document.createElement('div');
                 typingDiv.classList.add('chat-bubble', 'bot-message');
                 typingDiv.innerHTML = `
-                    <img src="assets/media/users/default.jpg" class="chat-avatar">
-                    <span class="typing-indicator"></span>
-                    <span class="typing-indicator"></span>
-                    <span class="typing-indicator"></span>
-                `;
+                <img src="assets/media/users/default.jpg" class="chat-avatar">
+                <span class="typing-indicator"></span>
+                <span class="typing-indicator"></span>
+                <span class="typing-indicator"></span>
+            `;
                 typingDiv.id = 'typing-indicator'; // Add ID for easy removal
                 chatWindow.appendChild(typingDiv);
                 chatWindow.scrollTop = chatWindow.scrollHeight;
@@ -480,10 +507,7 @@
                 chatWindow.appendChild(messageDiv);
                 chatWindow.scrollTop = chatWindow.scrollHeight;
 
-                responseText = responseText.summary || responseText.answer;
-
-                // console.log(responseText);
-
+                responseText = responseText.summary || responseText.answer || "Sorry, something went wrong. Please try again.";
 
                 let formattedText = textFormation(responseText);
 
