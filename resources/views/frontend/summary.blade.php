@@ -31,7 +31,7 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-baseline flex-wrap mr-5">
-                    <h2 class="d-flex align-items-center text-dark font-weight-bold my-1 mr-3" id="chat-title">Title
+                    <h2 class="d-flex align-items-center text-dark font-weight-bold my-1 mr-3" id="chat-title">
                     </h2>
                 </div>
             </div>
@@ -126,7 +126,7 @@
                 padding: 10px;
                 border-radius: 15px;
                 margin-bottom: 10px;
-                max-width: 80%;
+                max-width: 90%;
                 position: relative;
                 align-items: flex-start
             }
@@ -238,12 +238,12 @@
 
             @media (min-width: 768.1px) {
                 .chat-bubble {
-                    max-width: 70%;
+                    max-width: 90%;
                 }
 
                 .chat-window {
                     width: 100%;
-                    min-height: calc(100vh - 200px);
+                    min-height: calc(100vh - 240px);
                 }
             }
         </style>
@@ -297,7 +297,7 @@
             });
 
             function titleChange(fileName) {
-                const fullTitle = `Summary of ${fileName}`;
+                const fullTitle = `${fileName}`;
                 let index = 0;
 
                 const typingInterval = setInterval(() => {
@@ -346,10 +346,10 @@
                     showTypingIndicator();
 
                     const response = await fetch(
-                    'http://192.168.10.185:8800/api/pdf_to_summary/', { // Replace with your API URL
-                        method: 'POST',
-                        body: formData
-                    });
+                        'http://62.171.163.137:8055/api/pdf_to_summary/', { // Replace with your API URL
+                            method: 'POST',
+                            body: formData
+                        });
 
                     removeTypingIndicator(); // Remove typing indicator once response is received
 
@@ -415,18 +415,18 @@
 
                     // Send the query to the API
                     const apiResponse = await fetch(
-                    'http://192.168.10.185:8800/api/text_with_query/', { // Replace with your API URL
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            text: extractDocText,
-                            query: userMessage
-                        })
-                    });
+                        'http://62.171.163.137:8055/api/text_with_query/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                text: extractDocText,
+                                query: userMessage
+                            })
+                        });
 
-                    removeTypingIndicator(); // Remove typing indicator once the response is received
+                    removeTypingIndicator();
 
                     if (!apiResponse.ok) {
                         throw new Error('Network response was not ok');
@@ -457,7 +457,7 @@
 
                 const avatar = document.createElement('img');
                 avatar.classList.add('chat-avatar');
-                avatar.src = sender === 'user' ? 'assets/media/users/100_12.jpg' : 'assets/media/users/default.jpg';
+                avatar.src = sender === 'user' ? 'assets/media/users/100_12.jpg' : 'assets/media/chatbot/ai-chatbot-4.png';
 
                 const textDiv = document.createElement('div');
                 textDiv.classList.add('chat-text');
@@ -474,7 +474,7 @@
                 const typingDiv = document.createElement('div');
                 typingDiv.classList.add('chat-bubble', 'bot-message');
                 typingDiv.innerHTML = `
-                <img src="assets/media/users/default.jpg" class="chat-avatar">
+                <img src="assets/media/chatbot/ai-chatbot-4.png" class="chat-avatar">
                 <span class="typing-indicator"></span>
                 <span class="typing-indicator"></span>
                 <span class="typing-indicator"></span>
@@ -502,24 +502,35 @@
 
             // Simulate typing effect for bot response
             function simulateTypingEffect(responseText) {
+                const suggestedQueries = responseText.suggested_queries || []; // Default to an empty array if not present
+
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('chat-bubble', 'bot-message');
 
                 const avatar = document.createElement('img');
                 avatar.classList.add('chat-avatar');
-                avatar.src = 'assets/media/users/default.jpg';
+                avatar.src = 'assets/media/chatbot/ai-chatbot-4.png';
+
+                // Create a container for the text and buttons
+                const contentDiv = document.createElement('div');
+                contentDiv.classList.add('content-container');
 
                 const textDiv = document.createElement('div');
                 textDiv.classList.add('chat-text');
+
+                contentDiv.appendChild(textDiv);
+
+                // Append the avatar and content container to the messageDiv
                 messageDiv.appendChild(avatar);
-                messageDiv.appendChild(textDiv);
+                messageDiv.appendChild(contentDiv);
 
                 chatWindow.appendChild(messageDiv);
                 chatWindow.scrollTop = chatWindow.scrollHeight;
 
-                responseText = responseText.summary || responseText.answer || "Sorry, something went wrong. Please try again.";
-
-                let formattedText = textFormation(responseText);
+                // Process the main response text
+                const responseTextContent = responseText.summary || responseText.answer ||
+                    "Sorry, something went wrong. Please try again.";
+                let formattedText = textFormation(responseTextContent);
 
                 let index = 0;
                 let tempDiv = document.createElement("div");
@@ -533,11 +544,50 @@
                         chatWindow.scrollTop = chatWindow.scrollHeight;
                         index++;
                         setTimeout(typeNextNode, 50); // Adjust the delay (50ms)
+                    } else {
+                        // Once typing is complete, show the suggested queries one by one
+                        showSuggestedQueries(suggestedQueries, textDiv);
                     }
                 }
 
                 typeNextNode(); // Start typing
             }
+
+            function showSuggestedQueries(queries, container) {
+                let queryIndex = 0;
+
+                function displayNextQuery() {
+                    if (queryIndex < queries.length - 2) {
+                        const textBtn = document.createElement('button');
+
+                        const icon = document.createElement('i');
+                        icon.classList.add('fa-regular', 'fa-circle-right', 'ms-2');
+                        textBtn.appendChild(icon);
+
+                        textBtn.appendChild(document.createTextNode(queries[queryIndex]));
+                        textBtn.classList.add('btn', 'btn-text-success', 'btn-hover-light-success', 'font-weight-bold', 'mr-2',
+                            'text-left'); // Apply Bootstrap 5 classes and margin
+
+                        textBtn.addEventListener('click', () => {
+                            handleQuestionClick(textBtn.innerText);
+                        });
+
+                        // Append the button to the container
+                        container.appendChild(textBtn);
+                        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+                        queryIndex++;
+                        // Add delay before showing the next button
+                        setTimeout(displayNextQuery, 300); // Adjust the delay (300ms) as needed
+                    }
+                }
+
+                if (queries) {
+                    displayNextQuery(); // Start showing buttons
+                }
+            }
+
+
 
             // Text formatting function
             function textFormation(responseText) {
@@ -548,6 +598,23 @@
                     .replace(/\n/g, '<br>'); // Newline to <br>
 
                 return formattedSummary;
+            }
+
+            async function handleQuestionClick(question) {
+                // console.log('Button clicked:', question);
+                userMessage = question
+                addMessage(userMessage, 'user-message', 'user');
+                userInput.value = ''; // Clear input field
+
+                try {
+                    await handleChatRequest();
+                } catch (error) {
+                    console.error('Error handling chat request:', error);
+                    removeTypingIndicator(); // Ensure typing indicator is removed even on error
+                    const errorMessage =
+                        "Sorry, something went wrong while sending the message. Please try again.";
+                    simulateTypingEffect(errorMessage);
+                }
             }
         </script>
     @endpush
