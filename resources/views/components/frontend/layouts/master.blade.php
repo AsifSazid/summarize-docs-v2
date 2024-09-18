@@ -17,14 +17,68 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        @font-face {
+            font-family: __Roboto_8032a8;
+            font-style: normal;
+            font-weight: 700;
+            font-display: swap;
+            src: url(/_next/static/media/6ebb97b5c9fa4e03-s.p.woff2) format("woff2");
+            unicode-range: u+00??, u+0131, u+0152-0153, u+02bb-02bc, u+02c6, u+02da, u+02dc, u+0304, u+0308, u+0329, u+2000-206f, u+2074, u+20ac, u+2122, u+2191, u+2193, u+2212, u+2215, u+feff, u+fffd
+        }
 
+        @font-face {
+            font-family: __Roboto_Fallback_8032a8;
+            src: local("Arial");
+            ascent-override: 92.98%;
+            descent-override: 24.47%;
+            line-gap-override: 0%;
+            size-adjust: 99.78%
+        }
+
+        .__brand_wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .__brand_logo_name {
+            gap: 8px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: row;
+            -webkit-box-align: center;
+            justify-content: center;
+            align-items: center;
+            width: 100px;
+        }
+
+        .__logo_name {
+            font-family: __Roboto_8032a8, __Roboto_Fallback_8032a8;
+            font-weight: 700;
+            font-style: normal;
+            line-height: 1px;
+            letter-spacing: 1.2px;
+        }
+
+        .history-file-name {
+            display: inline-block;
+            max-width: 180px;
+            /* Adjust width as needed */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: bottom;
+        }
+    </style>
     @stack('css')
 </head>
 
-<body id="kt_body" class="header-mobile-fixed subheader-enabled aside-enabled aside-fixed aside-secondary-enabled page-loading">
+<body id="kt_body"
+    class="header-mobile-fixed subheader-enabled aside-enabled aside-fixed aside-secondary-enabled page-loading">
     <div id="kt_header_mobile" class="header-mobile">
         <a href="index.html">
-            <img alt="Logo" src="{{ asset('assets') }}/media/logos/logo-letter-2.png"
+            <img alt="Logo" src="{{ asset('assets') }}/media/logos/sharly-logo.webp"
                 class="logo-default max-h-30px" />
         </a>
         <div class="d-flex align-items-center">
@@ -39,11 +93,13 @@
                 <div class="">
                     <div class="aside-workspace scroll scroll-push my-2">
                         <div class="tab-content m-5">
-                            <div class="tab-pane p-3 px-lg-7 py-lg-5 fade show active" id="kt_aside_tab_1">
-                                <div class="brand flex-column-auto mb-6" id="kt_brand" kt-hidden-height="65"
-                                    style="">
-                                    <a href="index.html" class="brand-logo">
-                                        <img alt="Logo" src="{{ asset('assets') }}/media/logos/logo-dark.png">
+                            <div class="tab-pane fade show active" id="kt_aside_tab_1">
+                                <div class="brand flex-column-auto mb-6 __brand_wrapper" id="kt_brand"
+                                    kt-hidden-height="65" style="">
+                                    <a href="index.html" class="brand-logo __brand_logo_name">
+                                        <img class="max-h-30px" alt="Logo"
+                                            src="{{ asset('assets') }}/media/logos/sharly-logo.webp">
+                                        <h2 class="__logo_name">Sharly</h2>
                                     </a>
                                 </div>
                                 <form action="">
@@ -71,44 +127,26 @@
                                         </span>
                                     </div>
                                 </form>
-                                <h3 class="p-2 p-lg-3 my-1 my-lg-3">History</h3>
-                                <h6 class="p-2 p-lg-3 my-1 my-lg-3 font-weight-semi-bold">Today</h6>
+                                {{-- <h3 class="p-2 p-lg-3 my-1 my-lg-3">History</h3> --}}
+                                <p class="p-2 p-lg-3 my-1 my-lg-3 font-size-sm"><strong>Today</strong></p>
                                 <div class="list list-hover">
                                     <div class="list-item hoverable p-2 p-lg-3 mb-2">
                                         <div class="d-flex align-items-center">
                                             <div class="d-flex flex-column flex-grow-1 mr-2">
-                                                <a href="#" class="text-muted text-hover-primary">
-                                                    <span class="text-dark-75 font-size-h6 mb-0">Getting Start with
-                                                        OneDrive.pdf</span>
-                                                    <p class="font-weight-bold mb-0">8:30 AM</p>
+                                                <a href="#" class="text-muted text-hover-primary" data-toggle="tooltip" title="Getting Start with OneDrive.pdf - 8:30 AM">
+                                                    <span class="text-dark-75 mb-0 history-file-name">Getting Start with OneDrive.pdf</span>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <h6 class="p-2 p-lg-3 my-1 my-lg-3 font-weight-semi-bold">Yesterday</h6>
+                                <p class="p-2 p-lg-3 my-1 my-lg-3 font-size-sm"><strong>Previous 30 Days</strong></p>
                                 <div class="list list-hover">
                                     <div class="list-item hoverable p-2 p-lg-3 mb-2">
                                         <div class="d-flex align-items-center">
                                             <div class="d-flex flex-column flex-grow-1 mr-2">
-                                                <a href="#" class="text-muted text-hover-primary">
-                                                    <span
-                                                        class="text-dark-75 font-size-h6 mb-0">National_AI_Policy_2024_Draft_Mode.pdf</span>
-                                                    <p class="font-weight-bold mb-0">5:30 PM, Yesterday</p>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <h6 class="p-2 p-lg-3 my-1 my-lg-3 font-weight-semi-bold">Earlier</h6>
-                                <div class="list list-hover">
-                                    <div class="list-item hoverable p-2 p-lg-3 mb-2">
-                                        <div class="d-flex align-items-center">
-                                            <div class="d-flex flex-column flex-grow-1 mr-2">
-                                                <a href="#" class="text-muted text-hover-primary">
-                                                    <span
-                                                        class="text-dark-75 font-size-h6 mb-0">National_AI_Policy_2024_Draft_Mode.pdf</span>
-                                                    <p class="font-weight-bold mb-0">5:30 PM, Yesterday</p>
+                                                <a href="#" class="text-muted text-hover-primary" data-toggle="tooltip" title="National_AI_Policy_2024_Draft_Mode.pdf - 8:30 AM">
+                                                    <span class="text-dark-75 mb-0 history-file-name">National_AI_Policy_2024_Draft_Mode.pdf</span>
                                                 </a>
                                             </div>
                                         </div>
@@ -118,10 +156,19 @@
                                     <div class="list-item hoverable p-2 p-lg-3 mb-2">
                                         <div class="d-flex align-items-center">
                                             <div class="d-flex flex-column flex-grow-1 mr-2">
-                                                <a href="#" class="text-muted text-hover-primary">
-                                                    <span
-                                                        class="text-dark-75 font-size-h6 mb-0">National_AI_Policy_2024_Draft_Mode.pdf</span>
-                                                    <p class="font-weight-bold mb-0">5:30 PM, Yesterday</p>
+                                                <a href="#" class="text-muted text-hover-primary" data-toggle="tooltip" title="National_AI_Policy_2024_Draft_Mode.pdf - 8:30 AM">
+                                                    <span class="text-dark-75 mb-0 history-file-name">National_AI_Policy_2024_Draft_Mode.pdf</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="list list-hover">
+                                    <div class="list-item hoverable p-2 p-lg-3 mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <div class="d-flex flex-column flex-grow-1 mr-2">
+                                                <a href="#" class="text-muted text-hover-primary" data-toggle="tooltip" title="National_AI_Policy_2024_Draft_Mode.pdf - 8:30 AM">
+                                                    <span class="text-dark-75 mb-0 history-file-name">National_AI_Policy_2024_Draft_Mode.pdf</span>
                                                 </a>
                                             </div>
                                         </div>
@@ -137,23 +184,8 @@
             </div>
             <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
                 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-                    {{$slot}}
+                    {{ $slot }}
                 </div>
-                <div class="footer py-4 d-flex flex-lg-column" id="kt_footer">
-                    <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between">
-                        <div class="text-dark order-2 order-md-1">
-                            <span class="text-muted font-weight-bold mr-2">2021©</span>
-                            <a href="http://keenthemes.com/metronic" target="_blank"
-                                class="text-dark-75 text-hover-primary">Keenthemes</a>
-                        </div>
-                        <div class="nav nav-dark order-1 order-md-2">
-                            <a href="http://keenthemes.com/metronic" target="_blank" class="nav-link pr-3 pl-0">Terms
-                                &
-                                Condition</a>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>

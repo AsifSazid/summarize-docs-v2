@@ -70,17 +70,28 @@
                         </div>
                     </div>
                 @else
-                    <a href="{{ route('register') }}" class="btn btn-flex btn-sm fw-bold btn-dark py-3">Sign Up</a>
+                    <a href="{{ route('register') }}" class="btn btn-flex btn-sm fw-bold btn-info py-3">Sign Up</a>
                 @endif
             </div>
         </div>
     </div>
     <div class="d-flex flex-column-fluid">
         <div class="container h-full">
-            <div class="card card-flush card-chat h-xl-100">
+            <div class="card card-flush card-chat">
                 <div class="card-body chat-window" id="chat-window">
                 </div>
                 <div class="card-footer">
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-outline-secondary mx-2 suggested-button"
+                            style="margin-left: 0px !important;">Summarize</button>
+                        <button type="button"
+                            class="btn btn-outline-secondary mx-2 suggested-button">Highlight</button>
+                        <button type="button" class="btn btn-outline-secondary mx-2 suggested-button">Simplify</button>
+                        <button type="button" class="btn btn-outline-secondary mx-2 suggested-button">Enhance</button>
+                        <button type="button" class="btn btn-outline-secondary mx-2 suggested-button">Critique</button>
+                        <button type="button" class="btn btn-outline-secondary mx-2 suggested-button">Meme</button>
+                        <button type="button" class="btn btn-outline-primary mx-2 suggested-button">+</button>
+                    </div>
                     <form id="chat-form">
                         <div class="input-group">
                             <input type="text" id="user-input" class="form-control" placeholder="Type a message..."
@@ -113,7 +124,7 @@
                 /* Enable vertical scroll */
                 padding: 10px;
                 border: 1px solid #ddd;
-                border-radius: 10px;
+                border-radius: 5px;
                 background-color: white;
                 height: 100%;
                 max-height: calc(100vh - 260px);
@@ -160,7 +171,7 @@
             .chat-text {
                 max-width: calc(100%);
                 word-wrap: break-word;
-                padding: 10px !important;
+                padding: 10px
             }
 
             .user-message .chat-text {
@@ -261,6 +272,11 @@
             const chatWindow = document.getElementById('chat-window');
             const userInput = document.getElementById('user-input');
             const chatForm = document.getElementById('chat-form');
+            const suggestedButtons = document.querySelectorAll('.suggested-button');
+
+            suggestedButtons.forEach(button => {
+                button.disabled = true;
+            });
 
             let extractDocText = '';
 
@@ -325,6 +341,10 @@
 
                         submitButton.disabled = false;
 
+                        suggestedButtons.forEach(button => {
+                            button.disabled = false;
+                        });
+
                         titleChange(fileName);
                     } catch (error) {
                         console.error('Error:', error);
@@ -360,7 +380,7 @@
                     const result = await response.json();
                     extractDocText = result.extracted_text;
 
-                    console.log('PDF Summary Result:', result); // Debugging log
+                    // console.log('PDF Summary Result:', result); // Debugging log
 
                     // Check if there is a valid summary in the result, otherwise show an error message
                     if (result.summary) {
@@ -433,7 +453,7 @@
                     }
 
                     const apiResult = await apiResponse.json();
-                    console.log('Chat API Result:', apiResult); // Debugging log
+                    // console.log('Chat API Result:', apiResult); // Debugging log
 
                     // Check if the result contains a valid answer
                     if (apiResult.answer) {
@@ -566,6 +586,7 @@
 
                         textBtn.appendChild(document.createTextNode(queries[queryIndex]));
                         textBtn.classList.add('btn', 'btn-text-success', 'btn-hover-light-success', 'font-weight-bold', 'mr-2',
+                            'mx-2',
                             'text-left'); // Apply Bootstrap 5 classes and margin
 
                         textBtn.addEventListener('click', () => {
@@ -616,6 +637,12 @@
                     simulateTypingEffect(errorMessage);
                 }
             }
+
+            suggestedButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    handleQuestionClick(button.innerText);
+                });
+            });
         </script>
     @endpush
 
