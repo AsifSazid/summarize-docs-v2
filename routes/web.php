@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SummaryDocsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,8 +30,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/get-summary', function () {
-    return view('frontend.summary');
-});
+Route::get('/get-summary', [SummaryDocsController::class, 'index'])->name('docSummary');
+
+Route::get('/get-extracted-text', [SummaryDocsController::class, 'getExtractedText'])->name('getExtractedText');
+Route::post('/store-extracted-text', [SummaryDocsController::class, 'storeExtractedText'])->name('storeExtractedText');
+
 
 require __DIR__.'/auth.php';

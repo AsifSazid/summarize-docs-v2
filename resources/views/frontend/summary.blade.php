@@ -85,7 +85,9 @@
                         <div class="input-group">
                             <input type="text" id="user-input" class="form-control" placeholder="Type a message..."
                                 required>
-                            <button class="btn btn-primary" type="submit"><i class="fas fa-paper-plane"></i></button>
+                            <button id="submitButton" class="btn btn-primary" type="submit" disabled>
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -250,35 +252,37 @@
 
     @push('js')
         <script>
-            // File upload and summary display
-
+            // Function to handle file uploads and drag-and-drop
             const fileDropArea = document.getElementById('file-upload');
             const fileInput = document.getElementById('fileInput');
             const responseBody = document.getElementById('responseBody');
             const chatTitle = document.getElementById('chat-title');
+            const submitButton = document.getElementById('submitButton');
+            const chatWindow = document.getElementById('chat-window');
+            const userInput = document.getElementById('user-input');
+            const chatForm = document.getElementById('chat-form');
 
             let extractDocText = '';
 
             // Click event to open file dialog
-            fileDropArea.addEventListener('click', function() {
+            fileDropArea.addEventListener('click', () => {
                 fileInput.click();
             });
 
             // Drag and Drop functionality
-            fileDropArea.addEventListener('dragover', function(e) {
+            fileDropArea.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 fileDropArea.classList.add('drag-over');
             });
 
-            fileDropArea.addEventListener('dragleave', function(e) {
+            fileDropArea.addEventListener('dragleave', (e) => {
                 e.preventDefault();
                 fileDropArea.classList.remove('drag-over');
             });
 
-            fileDropArea.addEventListener('drop', function(e) {
+            fileDropArea.addEventListener('drop', (e) => {
                 e.preventDefault();
                 fileDropArea.classList.remove('drag-over');
-
                 const files = e.dataTransfer.files;
                 if (files.length > 0) {
                     fileInput.files = files;
@@ -287,7 +291,7 @@
             });
 
             // File input change event
-            fileInput.addEventListener('change', function(event) {
+            fileInput.addEventListener('change', (event) => {
                 const files = event.target.files;
                 handleFiles(files);
             });
@@ -319,6 +323,8 @@
                         // Proceed to upload and summarize the file
                         await summarizedTextResponse(file);
 
+                        submitButton.disabled = false;
+
                         titleChange(fileName);
                     } catch (error) {
                         console.error('Error:', error);
@@ -340,10 +346,10 @@
                     showTypingIndicator();
 
                     const response = await fetch(
-                        'http://192.168.10.185:8800/api/pdf_to_summary/', { // Replace with your API URL
-                            method: 'POST',
-                            body: formData
-                        });
+                    'http://192.168.10.185:8800/api/pdf_to_summary/', { // Replace with your API URL
+                        method: 'POST',
+                        body: formData
+                    });
 
                     removeTypingIndicator(); // Remove typing indicator once response is received
 
@@ -371,73 +377,78 @@
                 }
             }
 
-            // Text formatting function
-            function textFormation(responseText) {
-                let formattedSummary = responseText
-                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold text
-                    .replace(/## (.*?)\n/g, '<h4>$1</h4>') // Headings
-                    .replace(/^- (.*)/gm, '<li>$1</li>') // Bullet points
-                    .replace(/\n/g, '<br>'); // Newline to <br>
-
-                return formattedSummary;
-            }
-
-            // Chat interface
-            const chatWindow = document.getElementById('chat-window');
-            const userInput = document.getElementById('user-input');
-            const chatForm = document.getElementById('chat-form');
-
-            // Handle form submit event
+            // Function to handle form submit event
             chatForm.addEventListener('submit', async (e) => {
                 e.preventDefault(); // Prevent the form from refreshing the page
 
-                const userMessage = userInput.value.trim();
+                userMessage = userInput.value.trim();
                 if (userMessage) {
                     addMessage(userMessage, 'user-message', 'user');
                     userInput.value = ''; // Clear input field
 
-                    // Show typing indicator while the bot is "thinking"
-                    showTypingIndicator();
-
                     try {
-                        const response = await fetch(
-                            'http://192.168.10.185:8800/api/text_with_query/', { // Replace with your API URL
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    text: extractDocText,
-                                    query: userMessage
-                                })
-                            });
-
-                        removeTypingIndicator(); // Remove the typing indicator once the response is received
-
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-
-                        const result = await response.json();
-                        console.log('Chat API Result:', result); // Debugging log
-
-                        // Check if the result contains a valid answer
-                        if (result.answer) {
-                            simulateTypingEffect(result);
-                        } else {
-                            simulateTypingEffect(
-                                "Sorry, I couldn't find an answer to your query. Please try again.");
-                        }
-
+                        await handleChatRequest();
                     } catch (error) {
-                        console.error('Error sending message:', error);
-                        removeTypingIndicator(); // Remove typing indicator even on error
+                        console.error('Error handling chat request:', error);
+                        removeTypingIndicator(); // Ensure typing indicator is removed even on error
                         const errorMessage =
                             "Sorry, something went wrong while sending the message. Please try again.";
                         simulateTypingEffect(errorMessage);
                     }
                 }
             });
+
+            // Function to handle chat request
+            async function handleChatRequest() {
+                try {
+                    const response = await fetch('/get-extracted-text');
+
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    const result = await response.json();
+                    extractDocText = result.extracted_text;
+
+                    // Show typing indicator while the bot is "thinking"
+                    showTypingIndicator();
+
+                    // Send the query to the API
+                    const apiResponse = await fetch(
+                    'http://192.168.10.185:8800/api/text_with_query/', { // Replace with your API URL
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            text: extractDocText,
+                            query: userMessage
+                        })
+                    });
+
+                    removeTypingIndicator(); // Remove typing indicator once the response is received
+
+                    if (!apiResponse.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    const apiResult = await apiResponse.json();
+                    console.log('Chat API Result:', apiResult); // Debugging log
+
+                    // Check if the result contains a valid answer
+                    if (apiResult.answer) {
+                        simulateTypingEffect(apiResult);
+                    } else {
+                        simulateTypingEffect("Sorry, I couldn't find an answer to your query. Please try again.");
+                    }
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    removeTypingIndicator(); // Remove typing indicator even on error
+                    const errorMessage = "Sorry, something went wrong while sending the message. Please try again.";
+                    simulateTypingEffect(errorMessage);
+                }
+            }
 
             // Add messages to chat window
             function addMessage(message, className, sender) {
@@ -491,7 +502,6 @@
 
             // Simulate typing effect for bot response
             function simulateTypingEffect(responseText) {
-
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('chat-bubble', 'bot-message');
 
@@ -527,6 +537,17 @@
                 }
 
                 typeNextNode(); // Start typing
+            }
+
+            // Text formatting function
+            function textFormation(responseText) {
+                let formattedSummary = responseText
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold text
+                    .replace(/## (.*?)\n/g, '<h4>$1</h4>') // Headings
+                    .replace(/^- (.*)/gm, '<li>$1</li>') // Bullet points
+                    .replace(/\n/g, '<br>'); // Newline to <br>
+
+                return formattedSummary;
             }
         </script>
     @endpush
