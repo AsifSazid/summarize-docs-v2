@@ -1,0 +1,12 @@
+In this version, We have fixed some issues/bugs in the UI/UX and also add some new UI/UX features.
+
+Issues/Bugs
+1. Store the extraction of Documnets in the Seesion.
+2. Broken UI/UX is fixed.
+3. Suggested Buttons are modified.
+4. Title section is responsive now.
+
+New features
+
+In-
+    1. UI/UX, some buttons are introduced like Reset, Share and Download.

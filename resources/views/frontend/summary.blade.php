@@ -31,7 +31,8 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-baseline flex-wrap mr-5">
-                    <h2 class="d-flex align-items-center text-dark font-weight-bold my-1 mr-3" id="chat-title">
+                    <h2 class="d-flex align-items-center text-dark font-weight-bold my-1 mr-3" id="chat-title"
+                        data-placement="bottom" data-toggle="tooltip" title="" aria-haspopup="true">
                     </h2>
                 </div>
             </div>
@@ -78,24 +79,50 @@
     <div class="d-flex flex-column-fluid">
         <div class="container h-full">
             <div class="card card-flush card-chat">
-                <div class="card-body chat-window" id="chat-window">
+                <div class="card-body d-flex flex-row p-0">
+                    <div class="chat-body d-flex flex-column">
+                        <div class="chat-window mb-2" id="chat-window">
+                            <!-- Chat messages go here and this section will scroll -->
+                        </div>
+                    </div>
+                    <div class="chat-action d-none" id="chat-action">
+                        <div data-bs-toggle="tooltip" data-original-title="Reset Conversation" data-bs-placement="left">
+                            <a class="btn btn-outline-secondary text-center" type="submit" aria-haspopup="true">
+                                <i class="fa-solid fa-arrows-rotate"></i>
+                            </a>
+                        </div>
+                        <div data-bs-toggle="tooltip" data-original-title="Share Conversation" data-bs-placement="left">
+                            <a class="btn btn-outline-secondary text-center" type="submit" aria-haspopup="true">
+                                <i class="fa-regular fa-share-from-square"></i>
+                            </a>
+                        </div>
+                        <div data-bs-toggle="tooltip" data-original-title="Download Conversation"
+                            data-bs-placement="left">
+                            <a class="btn btn-outline-secondary text-center" type="submit" aria-haspopup="true">
+                                <i class="fa-solid fa-download"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
+
+
+
+
                 <div class="card-footer">
-                    <div class="mb-3">
-                        <button type="button" class="btn btn-outline-secondary mx-2 suggested-button"
-                            style="margin-left: 0px !important;">Summarize</button>
+                    <div class="suggested-button-section d-flex flex-wrap mb-3">
+                        <button type="button" class="btn btn-outline-secondary m-2 suggested-button">Summarize</button>
+                        <button type="button" class="btn btn-outline-secondary m-2 suggested-button">Highlight</button>
+                        <button type="button" class="btn btn-outline-secondary m-2 suggested-button">Simplify</button>
+                        <button type="button" class="btn btn-outline-secondary m-2 suggested-button">Enhance</button>
                         <button type="button"
-                            class="btn btn-outline-secondary mx-2 suggested-button">Highlight</button>
-                        <button type="button" class="btn btn-outline-secondary mx-2 suggested-button">Simplify</button>
-                        <button type="button" class="btn btn-outline-secondary mx-2 suggested-button">Enhance</button>
-                        <button type="button" class="btn btn-outline-secondary mx-2 suggested-button">Critique</button>
-                        <button type="button" class="btn btn-outline-secondary mx-2 suggested-button">Meme</button>
-                        <button type="button" class="btn btn-outline-primary mx-2 suggested-button">+</button>
+                            class="btn btn-outline-secondary m-2 suggested-button">Critique</button>
+                        <button type="button" class="btn btn-outline-secondary m-2 suggested-button">Meme</button>
+                        <button type="button" class="btn btn-outline-primary m-2 suggested-button">+</button>
                     </div>
                     <form id="chat-form">
                         <div class="input-group">
-                            <input type="text" id="user-input" class="form-control" placeholder="Type a message..."
-                                required>
+                            <input type="text" id="user-input" class="form-control"
+                                placeholder="Type a message..." required>
                             <button id="submitButton" class="btn btn-primary" type="submit" disabled>
                                 <i class="fas fa-paper-plane"></i>
                             </button>
@@ -114,22 +141,64 @@
 
             .h-full {
                 /* max-height: 72vh !important; */
-                height: 100% !important;
+                height: calc(100vh - 180px) !important;
                 max-width: 100vw !important;
+            }
+
+            #chat-title {
+                display: inline-block;
+                width: auto;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                vertical-align: bottom;
+            }
+
+            .chat-body {
+                flex: 1;
+                display: flex;
+                overflow: hidden;
+                /* Prevent scrolling in the chat-body */
+                padding: 10px;
+                background-color: white;
+                max-height: calc(100vh - 260px);
+                /* Ensure the height adjusts on various devices */
             }
 
             .chat-window {
                 flex: 1;
                 overflow-y: auto;
-                /* Enable vertical scroll */
+                /* Make the chat-window scrollable */
                 padding: 10px;
-                border: 1px solid #ddd;
-                border-radius: 5px;
                 background-color: white;
-                height: 100%;
-                max-height: calc(100vh - 260px);
-                /* Ensure the chat window height adjusts on various devices */
             }
+
+            .chat-action {
+                padding: 10px;
+                background-color: white;
+                display: none;
+                flex-direction: column;
+                justify-content: flex-start;
+                margin-right: 1%;
+            }
+
+
+            .chat-action .btn {
+                border-radius: 50%;
+                width: 35px;
+                height: 35px;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .chat-action .btn i {
+                font-size: 14px;
+                /* Icon size */
+            }
+
 
             .chat-bubble {
                 display: flex;
@@ -149,6 +218,7 @@
                 float: left;
                 clear: both;
                 margin-top: 2%;
+                margin-bottom: 5%;
             }
 
             .user-message {
@@ -220,6 +290,10 @@
             }
 
             @media (max-width: 576px) {
+                #chat-title {
+                    max-width: 180px !important;
+                }
+
                 .chat-bubble {
                     max-width: 85%;
                     font-size: 14px;
@@ -233,10 +307,43 @@
                 .chat-window {
                     width: 100%;
                     min-height: calc(100vh - 200px);
+                    padding: 0px
+                }
+
+                .h-full {
+                    height: calc(100vh - 200px) !important;
+                    max-width: 100vw !important;
+                }
+
+
+                .user-message,
+                .bot-message {
+                    flex-direction: row;
+                    /* Make both types align in a row */
+                    justify-content: flex-start;
+                    /* Align both to the left */
+                    clear: both;
+                    /* Prevent floats */
+                    margin-top: 2%;
+                    padding-left: 3%;
+                    /* Adjust padding as needed */
+                }
+
+                .user-message {
+                    float: none;
+                    /* Remove float for small screens */
+                }
+
+                .bot-message {
+                    float: none;
+                    /* Remove float for small screens */
                 }
             }
 
             @media (min-width: 577px) and (max-width: 768px) {
+                #chat-title {
+                    max-width: 360px;
+                }
                 .chat-bubble {
                     max-width: 80%;
                 }
@@ -244,6 +351,11 @@
                 .chat-window {
                     width: 100%;
                     min-height: calc(100vh - 180px);
+                }
+
+                .h-full {
+                    height: calc(100vh - 180px) !important;
+                    max-width: 100vw !important;
                 }
             }
 
@@ -255,6 +367,17 @@
                 .chat-window {
                     width: 100%;
                     min-height: calc(100vh - 240px);
+                }
+
+                .h-full {
+                    height: calc(100vh - 180px) !important;
+                    max-width: 100vw !important;
+                }
+            }
+
+            @media (max-width: 991.98px) {
+                .chat-action {
+                    display: none;
                 }
             }
         </style>
@@ -273,6 +396,7 @@
             const userInput = document.getElementById('user-input');
             const chatForm = document.getElementById('chat-form');
             const suggestedButtons = document.querySelectorAll('.suggested-button');
+            const chatAction = document.getElementById('chat-action');
 
             suggestedButtons.forEach(button => {
                 button.disabled = true;
@@ -324,6 +448,35 @@
                         clearInterval(typingInterval); // Stop the typing effect once complete
                     }
                 }, 50);
+                chatTitle.setAttribute('data-original-title', fullTitle)
+            }
+
+            async function storeExtractedTextInSession(extractDocText) {
+                try {
+                    const csrfMetaTag = document.querySelector('meta[name="csrf-token"]');
+                    const csrfToken = csrfMetaTag ? csrfMetaTag.getAttribute('content') : '';
+
+                    const response = await fetch('/store-extracted-text', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        body: JSON.stringify({
+                            extracted_text: extractDocText
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    const result = await response.json();
+
+                } catch (error) {
+
+                    console.error('Error sending extracted text:', error);
+                }
             }
 
             // Function to handle files
@@ -338,6 +491,10 @@
 
                         // Proceed to upload and summarize the file
                         await summarizedTextResponse(file);
+                        if (window.innerWidth >= 992) {
+                            chatAction.classList.replace('d-none', 'd-flex');
+                            console.log(chatAction.classList);
+                        }
 
                         submitButton.disabled = false;
 
@@ -371,6 +528,7 @@
                             body: formData
                         });
 
+
                     removeTypingIndicator(); // Remove typing indicator once response is received
 
                     if (!response.ok) {
@@ -380,9 +538,8 @@
                     const result = await response.json();
                     extractDocText = result.extracted_text;
 
-                    // console.log('PDF Summary Result:', result); // Debugging log
+                    storeExtractedTextInSession(extractDocText);
 
-                    // Check if there is a valid summary in the result, otherwise show an error message
                     if (result.summary) {
                         simulateTypingEffect(result);
                     } else {
@@ -584,6 +741,8 @@
                         icon.classList.add('fa-regular', 'fa-circle-right', 'ms-2');
                         textBtn.appendChild(icon);
 
+                        textBtn.appendChild(document.createTextNode('\u00A0')); // Non-breaking space
+
                         textBtn.appendChild(document.createTextNode(queries[queryIndex]));
                         textBtn.classList.add('btn', 'btn-text-success', 'btn-hover-light-success', 'font-weight-bold', 'mr-2',
                             'mx-2',
@@ -608,8 +767,6 @@
                 }
             }
 
-
-
             // Text formatting function
             function textFormation(responseText) {
                 let formattedSummary = responseText
@@ -623,7 +780,7 @@
 
             async function handleQuestionClick(question) {
                 // console.log('Button clicked:', question);
-                userMessage = question
+                userMessage = question + ' the content'
                 addMessage(userMessage, 'user-message', 'user');
                 userInput.value = ''; // Clear input field
 
