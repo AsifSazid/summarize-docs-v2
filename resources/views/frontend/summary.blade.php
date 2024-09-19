@@ -140,55 +140,51 @@
             }
 
             .h-full {
-                /* max-height: 72vh !important; */
                 height: calc(100vh - 180px) !important;
                 max-width: 100vw !important;
             }
 
             #chat-title {
                 display: inline-block;
-                width: auto;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 vertical-align: bottom;
+                width: auto;
+            }
+
+            .chat-body,
+            .chat-window {
+                background-color: white;
+                padding: 10px;
             }
 
             .chat-body {
                 flex: 1;
                 display: flex;
                 overflow: hidden;
-                /* Prevent scrolling in the chat-body */
-                padding: 10px;
-                background-color: white;
-                max-height: calc(100vh - 260px);
-                /* Ensure the height adjusts on various devices */
+                max-height: calc(100vh - 250px);
             }
 
             .chat-window {
                 flex: 1;
                 overflow-y: auto;
-                /* Make the chat-window scrollable */
-                padding: 10px;
-                background-color: white;
             }
 
             .chat-action {
                 padding: 10px;
-                background-color: white;
                 display: none;
                 flex-direction: column;
                 justify-content: flex-start;
                 margin-right: 1%;
+                background-color: white;
             }
-
 
             .chat-action .btn {
                 border-radius: 50%;
                 width: 35px;
                 height: 35px;
-                margin-top: 10px;
-                margin-bottom: 10px;
+                margin: 10px 0;
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -196,38 +192,36 @@
 
             .chat-action .btn i {
                 font-size: 14px;
-                /* Icon size */
             }
-
 
             .chat-bubble {
                 display: flex;
-                align-items: center;
+                align-items: flex-start;
                 padding: 10px;
                 border-radius: 15px;
                 margin-bottom: 10px;
                 max-width: 90%;
                 position: relative;
-                align-items: flex-start
             }
 
-            .bot-message {
+            .bot-message,
+            .user-message {
                 background-color: transparent;
-                text-align: left;
-                flex-direction: row;
-                float: left;
                 clear: both;
-                margin-top: 2%;
                 margin-bottom: 5%;
             }
 
-            .user-message {
-                background-color: transparent;
+            .bot-message {
                 text-align: left;
+                flex-direction: row;
+                float: left;
+            }
+
+            .user-message {
+                text-align: right;
                 flex-direction: row-reverse;
                 justify-content: flex-end;
                 float: right;
-                clear: both;
             }
 
             .chat-avatar {
@@ -235,13 +229,12 @@
                 height: 40px;
                 margin: 0 10px;
                 border-radius: 50%;
-                align-self: flex-start
             }
 
             .chat-text {
-                max-width: calc(100%);
+                max-width: 100%;
                 word-wrap: break-word;
-                padding: 10px
+                padding: 10px;
             }
 
             .user-message .chat-text {
@@ -289,54 +282,61 @@
                 }
             }
 
+            .blinking-cursor {
+                display: inline-block;
+                width: 1rem;
+                border-radius: 50%;
+                height: 1rem;
+                background-color: rgb(46, 46, 46);
+                margin-left: 2px;
+                animation: blink 1s step-end infinite;
+            }
+
+            @keyframes blink {
+
+                from,
+                to {
+                    visibility: hidden;
+                }
+
+                50% {
+                    visibility: visible;
+                }
+            }
+
+
             @media (max-width: 576px) {
                 #chat-title {
-                    max-width: 180px !important;
+                    max-width: 180px;
                 }
 
                 .chat-bubble {
-                    max-width: 85%;
-                    font-size: 14px;
+                    max-width: 100%;
+                    font-size: 13px;
                 }
 
                 .chat-avatar {
                     width: 30px;
                     height: 30px;
+                    margin: 0px 10px 0px 0px;
                 }
 
-                .chat-window {
-                    width: 100%;
-                    min-height: calc(100vh - 200px);
-                    padding: 0px
-                }
-
+                .chat-window,
                 .h-full {
-                    height: calc(100vh - 200px) !important;
-                    max-width: 100vw !important;
+                    min-height: calc(100vh - 280px);
                 }
-
 
                 .user-message,
                 .bot-message {
                     flex-direction: row;
-                    /* Make both types align in a row */
                     justify-content: flex-start;
-                    /* Align both to the left */
-                    clear: both;
-                    /* Prevent floats */
-                    margin-top: 2%;
-                    padding-left: 3%;
-                    /* Adjust padding as needed */
+                    float: none;
+                    text-align: left;
+                    width: 100%;
                 }
 
-                .user-message {
-                    float: none;
-                    /* Remove float for small screens */
-                }
-
-                .bot-message {
-                    float: none;
-                    /* Remove float for small screens */
+                .chat-body {
+                    max-height: calc(100vh - 280px);
                 }
             }
 
@@ -344,18 +344,14 @@
                 #chat-title {
                     max-width: 360px;
                 }
+
                 .chat-bubble {
                     max-width: 80%;
                 }
 
-                .chat-window {
-                    width: 100%;
-                    min-height: calc(100vh - 180px);
-                }
-
+                .chat-window,
                 .h-full {
-                    height: calc(100vh - 180px) !important;
-                    max-width: 100vw !important;
+                    min-height: calc(100vh - 180px);
                 }
             }
 
@@ -365,13 +361,11 @@
                 }
 
                 .chat-window {
-                    width: 100%;
                     min-height: calc(100vh - 240px);
                 }
 
                 .h-full {
-                    height: calc(100vh - 180px) !important;
-                    max-width: 100vw !important;
+                    min-height: calc(100vh - 240px);
                 }
             }
 
@@ -679,7 +673,7 @@
 
             // Simulate typing effect for bot response
             function simulateTypingEffect(responseText) {
-                const suggestedQueries = responseText.suggested_queries || []; // Default to an empty array if not present
+                const suggestedQueries = responseText.suggested_queries || [];
 
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('chat-bubble', 'bot-message');
@@ -688,7 +682,6 @@
                 avatar.classList.add('chat-avatar');
                 avatar.src = 'assets/media/chatbot/ai-chatbot-4.png';
 
-                // Create a container for the text and buttons
                 const contentDiv = document.createElement('div');
                 contentDiv.classList.add('content-container');
 
@@ -704,7 +697,6 @@
                 chatWindow.appendChild(messageDiv);
                 chatWindow.scrollTop = chatWindow.scrollHeight;
 
-                // Process the main response text
                 const responseTextContent = responseText.summary || responseText.answer ||
                     "Sorry, something went wrong. Please try again.";
                 let formattedText = textFormation(responseTextContent);
@@ -714,21 +706,28 @@
                 tempDiv.innerHTML = formattedText;
                 let nodes = Array.from(tempDiv.childNodes);
 
+                // Create a blinking cursor element
+                const cursor = document.createElement('span');
+                cursor.classList.add('blinking-cursor');
+                textDiv.appendChild(cursor);
+
                 function typeNextNode() {
                     if (index < nodes.length) {
-                        // Append the current node (either text or HTML element) to the target element
-                        textDiv.appendChild(nodes[index].cloneNode(true));
+                        textDiv.insertBefore(nodes[index].cloneNode(true), cursor); // Insert before the cursor
                         chatWindow.scrollTop = chatWindow.scrollHeight;
                         index++;
-                        setTimeout(typeNextNode, 50); // Adjust the delay (50ms)
+                        setTimeout(typeNextNode, 200); // Adjust the delay (50ms)
                     } else {
-                        // Once typing is complete, show the suggested queries one by one
+                        // Once typing is complete, remove the cursor
+                        cursor.remove();
+                        // Show the suggested queries one by one
                         showSuggestedQueries(suggestedQueries, textDiv);
                     }
                 }
 
                 typeNextNode(); // Start typing
             }
+
 
             function showSuggestedQueries(queries, container) {
                 let queryIndex = 0;
