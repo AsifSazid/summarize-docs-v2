@@ -15,7 +15,7 @@
                             <li class="navi-header font-weight-bold py-4">
                                 <span class="font-size-lg">Custom Instruction</span>
                             </li>
-                            <li class="navi-header font-weight-bold py-4">
+                            <li class="navi-header font-weight-bold py-4" id="resetChatSection">
                                 <span class="font-size-lg">Reset Chat</span>
                             </li>
                             <li class="navi-header font-weight-bold py-4">
@@ -87,18 +87,19 @@
                     </div>
                     <div class="chat-action d-none" id="chat-action">
                         <div data-bs-toggle="tooltip" data-original-title="Reset Conversation" data-bs-placement="left">
-                            <a class="btn btn-outline-secondary text-center" type="submit" aria-haspopup="true">
+                            <a class="btn btn-outline-secondary text-center" id="resetConversationBtn"
+                                aria-haspopup="true">
                                 <i class="fa-solid fa-arrows-rotate"></i>
                             </a>
                         </div>
                         <div data-bs-toggle="tooltip" data-original-title="Share Conversation" data-bs-placement="left">
-                            <a class="btn btn-outline-secondary text-center" type="submit" aria-haspopup="true">
+                            <a class="btn btn-outline-secondary text-center" aria-haspopup="true">
                                 <i class="fa-regular fa-share-from-square"></i>
                             </a>
                         </div>
                         <div data-bs-toggle="tooltip" data-original-title="Download Conversation"
                             data-bs-placement="left">
-                            <a class="btn btn-outline-secondary text-center" type="submit" aria-haspopup="true">
+                            <a class="btn btn-outline-secondary text-center" aria-haspopup="true">
                                 <i class="fa-solid fa-download"></i>
                             </a>
                         </div>
@@ -798,6 +799,23 @@
                 button.addEventListener('click', function() {
                     handleQuestionClick(button.innerText);
                 });
+            });
+
+            function resetConversation() {
+                // Perform page reload or reset logic
+                window.location.reload(); // This reloads the page
+            }
+
+            // Attach event listener to the reset button
+            document.getElementById('resetConversationBtn').addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default behavior
+                resetConversation(); // Call the reset function
+            });
+
+            // Attach event listener to the "Reset Chat" section
+            document.getElementById('resetChatSection').addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default behavior
+                resetConversation(); // Call the reset function
             });
         </script>
     @endpush
