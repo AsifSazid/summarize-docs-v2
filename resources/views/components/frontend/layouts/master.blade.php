@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="{{ asset('assets/css/master.css')}}">
+    <link rel="stylesheet" href="{{ asset('assets/css/master.css') }}">
     @stack('css')
 </head>
 
@@ -37,7 +37,7 @@
     <div class="d-flex flex-column flex-root">
         <div class="d-flex flex-row flex-column-fluid page">
             <div class="aside aside-left" id="kt_aside">
-                <div class="aside-primary d-flex flex-column align-items-center flex-row-auto">
+                <div class="aside-primary d-flex flex-column flex-row-auto p-4">
                     <!--begin::Brand-->
                     <div class="aside-brand d-flex flex-column align-items-left flex-column-auto py-5 py-lg-12">
                         <div class="brand flex-column-auto mb-6 __brand_wrapper" id="kt_brand" kt-hidden-height="65"
@@ -72,71 +72,20 @@
                             </div>
                         </form>
                     </div>
-                    <div class="aside-nav d-flex flex-column align-items-left
-                     flex-column-fluid scroll scroll-pull ps ps--active-y"
-                        style="height: 75px; overflow: hidden;">
+                    <div
+                        class="aside-nav d-flex flex-column align-items-left flex-column-fluid scroll scroll-pull ps ps--active-y">
                         <p class="p-2 p-lg-3 my-1 my-lg-3 font-size-sm"><strong>Today</strong></p>
-                        <div class="list list-hover">
-                            <div class="list-item hoverable p-2 p-lg-3 mb-2">
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex flex-column flex-grow-1 mr-2">
-                                        <a href="#" class="text-muted text-hover-primary" data-toggle="tooltip"
-                                            title="Getting Start with OneDrive.pdf - 8:30 AM">
-                                            <span class="text-dark-75 mb-0 history-file-name">Getting Start
-                                                with OneDrive.pdf</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="p-2 p-lg-3 my-1 my-lg-3 font-size-sm"><strong>Previous 30 Days</strong></p>
-                        <div class="list list-hover">
-                            <div class="list-item hoverable p-2 p-lg-3 mb-2">
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex flex-column flex-grow-1 mr-2">
-                                        <a href="#" class="text-muted text-hover-primary" data-toggle="tooltip"
-                                            title="National_AI_Policy_2024_Draft_Mode.pdf - 8:30 AM">
-                                            <span
-                                                class="text-dark-75 mb-0 history-file-name">National_AI_Policy_2024_Draft_Mode.pdf</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="list list-hover">
-                            <div class="list-item hoverable p-2 p-lg-3 mb-2">
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex flex-column flex-grow-1 mr-2">
-                                        <a href="#" class="text-muted text-hover-primary" data-toggle="tooltip"
-                                            title="National_AI_Policy_2024_Draft_Mode.pdf - 8:30 AM">
-                                            <span
-                                                class="text-dark-75 mb-0 history-file-name">National_AI_Policy_2024_Draft_Mode.pdf</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="list list-hover">
-                            <div class="list-item hoverable p-2 p-lg-3 mb-2">
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex flex-column flex-grow-1 mr-2">
-                                        <a href="#" class="text-muted text-hover-primary" data-toggle="tooltip"
-                                            title="National_AI_Policy_2024_Draft_Mode.pdf - 8:30 AM">
-                                            <span
-                                                class="text-dark-75 mb-0 history-file-name">National_AI_Policy_2024_Draft_Mode.pdf</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="list today-list"></div>
+
+                        <!-- This title will be conditionally hidden -->
+                        <p class="p-2 p-lg-3 my-1 my-lg-3 font-size-sm previous-days-title"><strong>Previous 30
+                                Days</strong></p>
+                        <div class="list previous-list"></div>
+
+                        <!-- Load More button, hidden by default -->
                         <div class="text-center">
-                            <button class="btn btn-sm btn-bg-light btn-hover-primary">Load More</button>
-                        </div>
-                        <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
-                            <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
-                        </div>
-                        <div class="ps__rail-y" style="top: 0px; right: -2px; height: 75px;">
-                            <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 40px;"></div>
+                            <button class="btn btn-sm btn-bg-light btn-hover-primary btn-load-more"
+                                style="display: none;">Load More</button>
                         </div>
                     </div>
                     <div class="aside-footer d-flex flex-column align-items-center flex-column-auto py-4 py-lg-10">
@@ -337,10 +286,105 @@
     </script>
     <script src="{{ asset('assets') }}/plugins/global/plugins.bundle.js"></script>
     <script src="{{ asset('assets') }}/plugins/custom/prismjs/prismjs.bundle.js"></script>
-    <script src="{{ asset('assets') }}/js/scripts.bundle.js"></script>
-    <script src="{{ asset('assets') }}/js/pages/custom/todo/todo.js"></script>
+    <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
+    <script src="{{ asset('assets/js/pages/custom/todo/todo.js') }}"></script>
 
     @stack('js')
+
+    <script>
+        function getAllConversations() {
+            let allConversations = [];
+
+            for (let i = 0; i < localStorage.length; i++) {
+                let key = localStorage.key(i);
+
+                if (key.startsWith("history-")) {
+                    let conversationData = localStorage.getItem(key);
+                    let conversation = JSON.parse(conversationData);
+                    allConversations.push(conversation);
+                }
+            }
+
+            return allConversations;
+        }
+
+        function renderConversations() {
+            let conversationsArray = getAllConversations();
+            let todayListContainer = document.querySelector('.today-list');
+            let previousListContainer = document.querySelector('.previous-list');
+            let loadMoreButton = document.querySelector('.btn-load-more');
+            let previousDaysTitle = document.querySelector('.previous-days-title');
+
+            // Clear the current lists
+            todayListContainer.innerHTML = '';
+            previousListContainer.innerHTML = '';
+
+            // Get today's date
+            let today = new Date();
+            today.setHours(0, 0, 0, 0); // Set to the start of the day
+
+            let todayConversationsCount = 0;
+            let previousConversationsCount = 0;
+
+            // Iterate through the conversations and categorize them
+            conversationsArray.forEach(conversation => {
+                let conversationDate = new Date(conversation.created_at);
+                let conversationHtml = `
+            <div class="list-item hoverable p-2 p-lg-3 mb-2" onclick="toggleHover(this)">
+                <div class="d-flex align-items-center">
+                    <div class="d-flex flex-column flex-grow-1 mr-2">
+                        <a href="http://summarize-docs-v2.test/get-summary?${conversation.id}" class="text-muted text-hover-primary" data-toggle="tooltip" title="${conversation.title} - ${conversationDate.toLocaleTimeString()}">
+                            <span class="text-dark-75 mb-0 history-file-name">${conversation.title}</span>
+                        </a>
+                    </div>
+                </div>
+            </div>`;
+
+                // Check if the conversation is from today
+                if (conversationDate >= today) {
+                    // Append to today's list
+                    todayListContainer.innerHTML += conversationHtml;
+                    todayConversationsCount++;
+                } else {
+                    // Append to the previous 30 days list
+                    previousListContainer.innerHTML += conversationHtml;
+                    previousConversationsCount++;
+                }
+            });
+
+            // Conditionally show or hide the "Previous 30 Days" section
+            if (previousConversationsCount === 0) {
+                previousDaysTitle.style.display = 'none'; // Hide the title
+                previousListContainer.style.display = 'none'; // Hide the list
+            } else {
+                previousDaysTitle.style.display = 'block'; // Show the title
+                previousListContainer.style.display = 'block'; // Show the list
+            }
+
+            // Conditionally show the "Load More" button if there are 6 or more conversations
+            if (conversationsArray.length >= 6) {
+                loadMoreButton.style.display = 'block'; // Show the button
+            } else {
+                loadMoreButton.style.display = 'none'; // Hide the button
+            }
+        }
+
+        // Function to toggle hover effect on click
+        function toggleHover(element) {
+            // Remove hover from all items
+            document.querySelectorAll('.list-item.hoverable').forEach(item => {
+                item.classList.remove('hover');
+            });
+
+            // Add hover effect to the clicked item
+            element.classList.add('hover');
+        }
+
+
+
+        // Call the render function to display the conversations on page load
+        renderConversations();
+    </script>
 
 </body>
 

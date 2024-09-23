@@ -151,7 +151,13 @@
         <script>
             // Testing for Loacally Store Data Starts Here
             let msg = {};
-            let conversation = {};
+            let conversation = {
+                id: '',
+                messages: [],
+                created_at: '',
+                updated_at: '',
+                title: ''
+            };
             // Testing for Loacally Store Data Ends Here
             // Function to handle file uploads and drag-and-drop
             const fileDropArea = document.getElementById('file-upload');
@@ -184,6 +190,7 @@
             // Update URL with generated UUID
             function updateURLWithUUID() {
                 const uuid = generateUUID();
+                conversation.id = uuid;
                 const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname +
                     '?conversation=' + uuid;
 
@@ -229,10 +236,10 @@
             // File input change event
             fileInput.addEventListener('change', (event) => {
                 const files = event.target.files;
-                handleFiles(files);
                 if (!hasReset) { // Only update URL if it hasn't been reset
                     updateURLWithUUID(); // Update the URL here after file upload
                 }
+                handleFiles(files);
             });
 
             function titleChange(fileName) {
@@ -303,6 +310,9 @@
                     try {
                         const file = files[0];
                         const fileName = file.name;
+
+                        conversation.title = fileName;
+                        conversation.created_at = Date.now();
 
                         // Show the file name as a message in the user's chat bubble
                         addMessage(`Uploaded file: ${file.name}`, 'user-message', 'user');
@@ -434,6 +444,7 @@
 
                     // Check if the result contains a valid answer
                     if (apiResult.answer) {
+                        addMessage(apiResult.answer, 'bot-message', 'bot');
                         simulateTypingEffect(apiResult);
                     } else {
                         simulateTypingEffect("Sorry, I couldn't find an answer to your query. Please try again.");
@@ -448,14 +459,45 @@
             }
 
             // Add messages to chat window
+            // function addMessage(message, className, sender) {
+            //     const messageDiv = document.createElement('div');
+            //     messageDiv.classList.add('chat-bubble', className);
+
+            //     const avatar = document.createElement('img');
+            //     avatar.classList.add('chat-avatar');
+            //     avatar.src = sender === 'user' ? 'assets/media/users/100_12.jpg' : 'assets/media/chatbot/ai-chatbot-4.png';
+
+            //     const textDiv = document.createElement('div');
+            //     textDiv.classList.add('chat-text');
+            //     textDiv.innerText = message;
+
+            //     messageDiv.appendChild(avatar);
+            //     messageDiv.appendChild(textDiv);
+            //     chatWindow.appendChild(messageDiv);
+            //     chatWindow.scrollTop = chatWindow.scrollHeight;
+            // }
             function addMessage(message, className, sender) {
+                const msg = {
+                    conversation_id: conversation.id,
+                    timestamp: Date.now(),
+                    sender: sender,
+                    text: message
+                };
+
+                conversation.messages.push(msg); // Add message to the conversation
+                conversation.updated_at = Date.now(); // Update the timestamp
+
+                // Save the updated conversation to localStorage
+                localStorage.setItem("history-" + conversation.id, JSON.stringify(conversation));
+
+                renderConversations();
+
+                // Add message to the chat window
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('chat-bubble', className);
-
                 const avatar = document.createElement('img');
                 avatar.classList.add('chat-avatar');
                 avatar.src = sender === 'user' ? 'assets/media/users/100_12.jpg' : 'assets/media/chatbot/ai-chatbot-4.png';
-
                 const textDiv = document.createElement('div');
                 textDiv.classList.add('chat-text');
                 textDiv.innerText = message;
@@ -465,6 +507,7 @@
                 chatWindow.appendChild(messageDiv);
                 chatWindow.scrollTop = chatWindow.scrollHeight;
             }
+
 
             // Show typing indicator for bot response
             function showTypingIndicator() {
