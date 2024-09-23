@@ -74,7 +74,7 @@
                     </div>
                     <div
                         class="aside-nav d-flex flex-column align-items-left flex-column-fluid scroll scroll-pull ps ps--active-y">
-                        <p class="p-2 p-lg-3 my-1 my-lg-3 font-size-sm"><strong>Today</strong></p>
+                        <p class="p-2 p-lg-3 my-1 my-lg-3 font-size-sm todays-title"><strong>Today</strong></p>
                         <div class="list today-list"></div>
 
                         <!-- This title will be conditionally hidden -->
@@ -323,6 +323,7 @@
             let todayListContainer = document.querySelector('.today-list');
             let previousListContainer = document.querySelector('.previous-list');
             let loadMoreButton = document.querySelector('.btn-load-more');
+            let todaysTitle = document.querySelector('.todays-title');
             let previousDaysTitle = document.querySelector('.previous-days-title');
 
             // Clear the current lists
@@ -363,6 +364,15 @@
             });
 
             // Conditionally show or hide the "Previous 30 Days" section
+            if (todayConversationsCount === 0) {
+                todaysTitle.style.display = 'none'; // Hide the title
+                todayListContainer.style.display = 'none'; // Hide the list
+            } else {
+                todaysTitle.style.display = 'block'; // Show the title
+                todayListContainer.style.display = 'block'; // Show the list
+            }
+
+
             if (previousConversationsCount === 0) {
                 previousDaysTitle.style.display = 'none'; // Hide the title
                 previousListContainer.style.display = 'none'; // Hide the list

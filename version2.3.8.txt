@@ -1,1 +1,0 @@
-A small bug fixes for responsiveness of the sidebar.

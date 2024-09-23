@@ -1,0 +1,1 @@
+Bot's first msg is storing in to th local storage.

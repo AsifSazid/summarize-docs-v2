@@ -365,6 +365,8 @@
                     const result = await response.json();
                     extractDocText = result.extracted_text;
 
+                    addMessage(result, 'bot-message', 'bot')
+
                     storeExtractedTextInSession(extractDocText);
 
                     // Testing for Loacally Store Data Starts Here
