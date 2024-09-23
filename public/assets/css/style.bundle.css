@@ -4963,8 +4963,15 @@ input[type=button].btn-block {
   text-align: center;
 }
 
+.tab-content{
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+}
+
 .tab-content > .tab-pane {
   display: none;
+  flex:1;
 }
 .tab-content > .active {
   display: block;
@@ -83286,23 +83293,24 @@ body {
 .aside {
   -webkit-box-shadow: none;
   box-shadow: none;
-  background-color: #ffffff;
+  /* background-color: #ffffff; */
+  background-color: transparent;
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
 .aside-secondary-enabled .aside {
-  width: 270px;
+  width: 285px;
 }
 .aside-secondary-disabled .aside {
   width: 100px;
 }
 .aside .aside-primary {
-  width: 100px;
+  width: 290px;
   -ms-flex-negative: 0;
   flex-shrink: 0;
 }
 .aside-secondary-enabled .aside .aside-primary {
-  border-right: 1px solid #EBEDF3;
+  /* border-right: 1px solid #EBEDF3; */
 }
 .aside .aside-secondary {
   overflow: hidden;

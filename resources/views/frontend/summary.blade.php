@@ -109,7 +109,7 @@
 
 
 
-                <div class="card-footer">
+                <div class="card-footer px-5 py-1">
                     <div class="suggested-button-section d-flex flex-wrap mb-3">
                         <button type="button" class="btn btn-outline-secondary m-2 suggested-button">Summarize</button>
                         <button type="button" class="btn btn-outline-secondary m-2 suggested-button">Highlight</button>
@@ -121,9 +121,17 @@
                         <button type="button" class="btn btn-outline-primary m-2 suggested-button">+</button>
                     </div>
                     <form id="chat-form">
-                        <div class="input-group">
-                            <input type="text" id="user-input" class="form-control"
-                                placeholder="Type a message..." required>
+                        <div class="input-group chat-input-group mb-5 m-2 p-2">
+                            <div class="__chat-form-attachment">
+                                <svg class="__attachment-icon" focusable="false" aria-hidden="true" viewBox="0 0 24 24"
+                                    data-testid="AttachFileOutlinedIcon">
+                                    <path
+                                        d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <input type="text" id="user-input" class="form-control chat-input"
+                                placeholder="Ask me anything about your document" required>
                             <button id="submitButton" class="btn btn-primary" type="submit" disabled>
                                 <i class="fas fa-paper-plane"></i>
                             </button>
@@ -136,6 +144,47 @@
 
     @push('css')
         <style>
+
+            .__chat-form-attachment {
+                margin-right: 8px;
+                display: flex;
+                cursor: pointer;
+                color: rgb(0, 26, 67);
+            }
+
+            .__chat-form-attachment:hover {
+                color: rgb(0, 89, 198);
+            }
+
+            .__attachment-icon {
+                user-select: none;
+                width: 1em;
+                height: 1em;
+                display: inline-block;
+                fill: currentcolor;
+                flex-shrink: 0;
+                font-size: 20px;
+                transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .chat-input-group {
+                border: 1px solid #3F4254;
+                border-radius: 5px;
+                width: 99%;
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-start;
+                align-items: center;
+            }
+
+            .chat-input-group:hover {
+                border: 1px solid #007bff
+            }
+
+            .chat-input {
+                border: 0px;
+            }
+
             .full-width {
                 width: 100%;
             }
@@ -164,7 +213,7 @@
                 flex: 1;
                 display: flex;
                 overflow: hidden;
-                max-height: calc(100vh - 250px);
+                max-height: calc(100vh - 230px);
             }
 
             .chat-window {
@@ -247,10 +296,6 @@
                 width: 100%;
                 background-color: #fff;
                 padding: 10px;
-            }
-
-            .input-group {
-                width: 100%;
             }
 
             .typing-indicator {
@@ -375,6 +420,11 @@
                     display: none;
                 }
             }
+
+            .suggested-btn{
+                /* padding: 1px 0px !important; */
+                background-color: #f6f6f9
+            }
         </style>
     @endpush
 
@@ -392,6 +442,7 @@
             const chatForm = document.getElementById('chat-form');
             const suggestedButtons = document.querySelectorAll('.suggested-button');
             const chatAction = document.getElementById('chat-action');
+            const chatPsRailY = document.getElementById('chat_ps__rail-y');
 
             suggestedButtons.forEach(button => {
                 button.disabled = true;
@@ -488,7 +539,6 @@
                         await summarizedTextResponse(file);
                         if (window.innerWidth >= 992) {
                             chatAction.classList.replace('d-none', 'd-flex');
-                            console.log(chatAction.classList);
                         }
 
                         submitButton.disabled = false;
@@ -605,7 +655,6 @@
                     }
 
                     const apiResult = await apiResponse.json();
-                    // console.log('Chat API Result:', apiResult); // Debugging log
 
                     // Check if the result contains a valid answer
                     if (apiResult.answer) {
@@ -745,8 +794,7 @@
 
                         textBtn.appendChild(document.createTextNode(queries[queryIndex]));
                         textBtn.classList.add('btn', 'btn-text-success', 'btn-hover-light-success', 'font-weight-bold', 'mr-2',
-                            'mx-2',
-                            'text-left'); // Apply Bootstrap 5 classes and margin
+                            'text-left', 'my-3', 'suggested-btn'); // Apply Bootstrap 5 classes and margin
 
                         textBtn.addEventListener('click', () => {
                             handleQuestionClick(textBtn.innerText);
@@ -779,7 +827,6 @@
             }
 
             async function handleQuestionClick(question) {
-                // console.log('Button clicked:', question);
                 userMessage = question + ' the content'
                 addMessage(userMessage, 'user-message', 'user');
                 userInput.value = ''; // Clear input field

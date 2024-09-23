@@ -1,0 +1,1 @@
+A huge changes on this version for UI/UX. Now it looks like the sharly.app (A PDF summarizer AI). But now I need to add the functional tasks. So that, I may say it's a minor changes on 2.3.4 version.
