@@ -37,7 +37,7 @@
     <div class="d-flex flex-column flex-root">
         <div class="d-flex flex-row flex-column-fluid page">
             <div class="aside aside-left" id="kt_aside">
-                <div class="aside-primary d-flex flex-column flex-row-auto p-4">
+                <div class="aside-primary d-flex flex-column align-items-center flex-row-auto">
                     <!--begin::Brand-->
                     <div class="aside-brand d-flex flex-column align-items-left flex-column-auto py-5 py-lg-12">
                         <div class="brand flex-column-auto mb-6 __brand_wrapper" id="kt_brand" kt-hidden-height="65"
@@ -85,7 +85,7 @@
                         <!-- Load More button, hidden by default -->
                         <div class="text-center">
                             <button class="btn btn-sm btn-bg-light btn-hover-primary btn-load-more"
-                                style="display: none;">Load More</button>
+                                style="display: none;">View All</button>
                         </div>
                     </div>
                     <div class="aside-footer d-flex flex-column align-items-center flex-column-auto py-4 py-lg-10">
@@ -291,7 +291,17 @@
 
     @stack('js')
 
-    <script>
+    <script>function adjustPadding() {
+        let asidePrimary = document.querySelector('.aside-primary');
+        if (window.innerWidth <= 991.8) {
+            asidePrimary.classList.remove('align-items-center');
+            asidePrimary.classList.add('p-5');
+        }
+    }
+
+    // Run on page load and window resize
+    window.addEventListener('load', adjustPadding);
+    window.addEventListener('resize', adjustPadding);
         function getAllConversations() {
             let allConversations = [];
 
