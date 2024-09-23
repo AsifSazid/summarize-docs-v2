@@ -291,17 +291,19 @@
 
     @stack('js')
 
-    <script>function adjustPadding() {
-        let asidePrimary = document.querySelector('.aside-primary');
-        if (window.innerWidth <= 991.8) {
-            asidePrimary.classList.remove('align-items-center');
-            asidePrimary.classList.add('p-5');
+    <script>
+        function adjustPadding() {
+            let asidePrimary = document.querySelector('.aside-primary');
+            if (window.innerWidth <= 991.8) {
+                asidePrimary.classList.remove('align-items-center');
+                asidePrimary.classList.add('p-5');
+            }
         }
-    }
 
-    // Run on page load and window resize
-    window.addEventListener('load', adjustPadding);
-    window.addEventListener('resize', adjustPadding);
+        // Run on page load and window resize
+        window.addEventListener('load', adjustPadding);
+        window.addEventListener('resize', adjustPadding);
+
         function getAllConversations() {
             let allConversations = [];
 
@@ -339,71 +341,71 @@
 
             // Iterate through the conversations and categorize them
             conversationsArray.forEach(conversation => {
-                let conversationDate = new Date(conversation.created_at);
-                let conversationHtml = `
-            <div class="list-item hoverable p-2 p-lg-3 mb-2" onclick="toggleHover(this)">
-                <div class="d-flex align-items-center">
-                    <div class="d-flex flex-column flex-grow-1 mr-2">
-                        <a href="http://summarize-docs-v2.test/get-summary?${conversation.id}" class="text-muted text-hover-primary" data-toggle="tooltip" title="${conversation.title} - ${conversationDate.toLocaleTimeString()}">
-                            <span class="text-dark-75 mb-0 history-file-name">${conversation.title}</span>
-                        </a>
-                    </div>
-                </div>
-            </div>`;
+                    let conversationDate = new Date(conversation.created_at);
+                    let conversationHtml = `
+                            <div class="list-item hoverable p-2 p-lg-3 mb-2" onclick="handleSidebarItemClick('${conversation.id}', this)">
+                                <div class="d-flex align-items-center">
+                                    <div class="d-flex flex-column flex-grow-1 mr-2">
+                                        <a class="text-muted text-hover-primary" title="${conversation.title}">
+                                            <span class="text-dark-75 mb-0 history-file-name">${conversation.title}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>`;
 
-                // Check if the conversation is from today
-                if (conversationDate >= today) {
-                    // Append to today's list
-                    todayListContainer.innerHTML += conversationHtml;
-                    todayConversationsCount++;
+                    // Check if the conversation is from today
+                    if (conversationDate >= today) {
+                        // Append to today's list
+                        todayListContainer.innerHTML += conversationHtml;
+                        todayConversationsCount++;
+                    } else {
+                        // Append to the previous 30 days list
+                        previousListContainer.innerHTML += conversationHtml;
+                        previousConversationsCount++;
+                    }
+                });
+
+                // Conditionally show or hide the "Previous 30 Days" section
+                if (todayConversationsCount === 0) {
+                    todaysTitle.style.display = 'none'; // Hide the title
+                    todayListContainer.style.display = 'none'; // Hide the list
                 } else {
-                    // Append to the previous 30 days list
-                    previousListContainer.innerHTML += conversationHtml;
-                    previousConversationsCount++;
+                    todaysTitle.style.display = 'block'; // Show the title
+                    todayListContainer.style.display = 'block'; // Show the list
                 }
-            });
 
-            // Conditionally show or hide the "Previous 30 Days" section
-            if (todayConversationsCount === 0) {
-                todaysTitle.style.display = 'none'; // Hide the title
-                todayListContainer.style.display = 'none'; // Hide the list
-            } else {
-                todaysTitle.style.display = 'block'; // Show the title
-                todayListContainer.style.display = 'block'; // Show the list
+
+                if (previousConversationsCount === 0) {
+                    previousDaysTitle.style.display = 'none'; // Hide the title
+                    previousListContainer.style.display = 'none'; // Hide the list
+                } else {
+                    previousDaysTitle.style.display = 'block'; // Show the title
+                    previousListContainer.style.display = 'block'; // Show the list
+                }
+
+                // Conditionally show the "Load More" button if there are 6 or more conversations
+                if (conversationsArray.length >= 6) {
+                    loadMoreButton.style.display = 'block'; // Show the button
+                } else {
+                    loadMoreButton.style.display = 'none'; // Hide the button
+                }
+            }
+
+            // Function to toggle hover effect on click
+            function toggleHover(element) {
+                // Remove hover from all items
+                document.querySelectorAll('.list-item.hoverable').forEach(item => {
+                    item.classList.remove('hover');
+                });
+
+                // Add hover effect to the clicked item
+                element.classList.add('hover');
             }
 
 
-            if (previousConversationsCount === 0) {
-                previousDaysTitle.style.display = 'none'; // Hide the title
-                previousListContainer.style.display = 'none'; // Hide the list
-            } else {
-                previousDaysTitle.style.display = 'block'; // Show the title
-                previousListContainer.style.display = 'block'; // Show the list
-            }
 
-            // Conditionally show the "Load More" button if there are 6 or more conversations
-            if (conversationsArray.length >= 6) {
-                loadMoreButton.style.display = 'block'; // Show the button
-            } else {
-                loadMoreButton.style.display = 'none'; // Hide the button
-            }
-        }
-
-        // Function to toggle hover effect on click
-        function toggleHover(element) {
-            // Remove hover from all items
-            document.querySelectorAll('.list-item.hoverable').forEach(item => {
-                item.classList.remove('hover');
-            });
-
-            // Add hover effect to the clicked item
-            element.classList.add('hover');
-        }
-
-
-
-        // Call the render function to display the conversations on page load
-        renderConversations();
+            // Call the render function to display the conversations on page load
+            renderConversations();
     </script>
 
 </body>

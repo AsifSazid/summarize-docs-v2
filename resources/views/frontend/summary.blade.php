@@ -691,6 +691,41 @@
                 e.preventDefault(); // Prevent default behavior
                 resetConversation(); // Call the reset function
             });
+
+            function handleSidebarItemClick(conversationId) {
+                // Retrieve the conversation data from localStorage
+                let conversationData = localStorage.getItem("history-" + conversationId);
+
+                if (conversationData) {
+                    let conversation = JSON.parse(conversationData);
+                    displayMessagesInChatWindow(conversation.messages);
+                    userInput.value = ''; // Clear input field for new messages
+                    conversation.id = conversationId; // Set the current conversation id for future messages
+
+                    // Remove the selected class from all items
+                    document.querySelectorAll('.list-item').forEach(item => {
+                        item.classList.remove('selected'); // Assuming you add a CSS class for selected items
+                    });
+
+                    // Add the selected class to the clicked item
+                    element.classList.add('selected');
+                }
+            }
+
+            function displayMessagesInChatWindow(messages) {
+                chatWindow.innerHTML = ''; // Clear the current chat window
+
+                messages.forEach(message => {
+                    let messageHtml = `
+                        <div class="message ${message.sender}">
+                            <span>${message.text}</span>
+                        </div>
+                    `;
+                    chatWindow.innerHTML += messageHtml; // Append each message
+                });
+
+                chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to the bottom
+            }
         </script>
     @endpush
 
