@@ -149,6 +149,10 @@
 
     @push('js')
         <script>
+            // Testing for Loacally Store Data Starts Here
+            let msg = {};
+            let conversation = {};
+            // Testing for Loacally Store Data Ends Here
             // Function to handle file uploads and drag-and-drop
             const fileDropArea = document.getElementById('file-upload');
             const fileInput = document.getElementById('fileInput');
@@ -163,6 +167,31 @@
             const attachmentButton = document.querySelector('.__chat-form-attachment');
             const offcanvasUploadButton = document.querySelector('.__offcanvas-new-file-upload-section');
             const offcanvasFileInput = document.querySelector('#offcanvasFileInput');
+            let hasReset = false;
+
+            window.addEventListener('load', () => {
+                hasReset = false; // Reset the state when the page loads
+            });
+
+            function generateUUID() {
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    var r = Math.random() * 16 | 0,
+                        v = c == 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                });
+            }
+
+            // Update URL with generated UUID
+            function updateURLWithUUID() {
+                const uuid = generateUUID();
+                const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname +
+                    '?conversation=' + uuid;
+
+                // Update the URL without reloading the page
+                history.pushState({
+                    path: newUrl
+                }, '', newUrl);
+            }
 
 
             suggestedButtons.forEach(button => {
@@ -201,6 +230,9 @@
             fileInput.addEventListener('change', (event) => {
                 const files = event.target.files;
                 handleFiles(files);
+                if (!hasReset) { // Only update URL if it hasn't been reset
+                    updateURLWithUUID(); // Update the URL here after file upload
+                }
             });
 
             function titleChange(fileName) {
@@ -325,6 +357,10 @@
 
                     storeExtractedTextInSession(extractDocText);
 
+                    // Testing for Loacally Store Data Starts Here
+
+                    // Testing for Loacally Store Data Ends Here
+
                     if (result.summary) {
                         simulateTypingEffect(result);
                     } else {
@@ -435,11 +471,11 @@
                 const typingDiv = document.createElement('div');
                 typingDiv.classList.add('chat-bubble', 'bot-message');
                 typingDiv.innerHTML = `
-                <img src="assets/media/chatbot/ai-chatbot-4.png" class="chat-avatar">
-                <span class="typing-indicator"></span>
-                <span class="typing-indicator"></span>
-                <span class="typing-indicator"></span>
-            `;
+                    <img src="assets/media/chatbot/ai-chatbot-4.png" class="chat-avatar">
+                    <span class="typing-indicator"></span>
+                    <span class="typing-indicator"></span>
+                    <span class="typing-indicator"></span>
+                `;
                 typingDiv.id = 'typing-indicator'; // Add ID for easy removal
                 chatWindow.appendChild(typingDiv);
                 chatWindow.scrollTop = chatWindow.scrollHeight;
@@ -589,7 +625,13 @@
             });
 
             function resetConversation() {
-                // Perform page reload or reset logic
+                hasReset = true;
+
+                // Reset the URL to its base without any parameters
+                const baseUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                history.replaceState({}, document.title, baseUrl);
+
+                // Perform a page reload or any additional reset logic here if needed
                 window.location.reload(); // This reloads the page
             }
 
