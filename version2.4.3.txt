@@ -9,3 +9,6 @@ V2.4.3
 
 1. All small bugs are removed for pc compatibility
 
+V2.4.4
+
+1. Maximum 5 data can be stored in the local storage.

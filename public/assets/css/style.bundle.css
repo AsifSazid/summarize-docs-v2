@@ -19622,7 +19622,7 @@ button.bg-white:focus {
 
   .pb-lg-12,
 .py-lg-12 {
-    padding-bottom: 3rem !important;
+    /* padding-bottom: 3rem !important; */
   }
 
   .pl-lg-12,

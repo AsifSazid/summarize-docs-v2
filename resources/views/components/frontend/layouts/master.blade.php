@@ -21,20 +21,17 @@
     @stack('css')
 
     <style>
-        .sidebar-title{
+        .sidebar-title {
             cursor: pointer;
         }
+
         .delete-btn {
             display: none;
             cursor: pointer;
         }
-        .delete-btn:hover {
-            color: #f64e60 !important;
-        }
 
         .list-item.hoverable:hover .delete-btn {
             display: block;
-            /* Show delete button on hover */
         }
     </style>
 </head>
@@ -127,7 +124,8 @@
                                 <div class="__lock-box counting-area">
                                     <div class="__counting-area counting">
                                         <div class="__counting counter-holder">
-                                            <p class="__counter-holder count-docs">1 / 1</p>
+                                            <p class="__counter-holder count-docs"> <span
+                                                    id="dataCountForStorage"></span> / 5</p>
                                             <span class="__counter-holder count-text">documents uploaded</span>
                                         </div>
                                         <span class="__counting counting-progress" role="progressbar"
@@ -318,6 +316,22 @@
             }
         }
 
+        function adjustProgressBar() {
+            let dataCountForStorage = document.getElementById('dataCountForStorage');
+            let progressBars = document.getElementsByClassName('main-pr-bar'); // Get elements by class name
+
+            if (progressBars.length > 0) { // Check if there is at least one element
+                let progressBar = progressBars[0]; // Access the first element in the collection
+                dataCountForStorage.innerHTML = localStorage.length; // Update the data count display
+                progressBar.style.width = (localStorage.length) * 20 + '%'; // Adjust progress bar width
+            } else {
+                console.warn("No elements found with class 'main-pr-bar'.");
+            }
+        }
+
+        adjustProgressBar();
+
+
         // Run on page load and window resize
         window.addEventListener('load', adjustPadding);
         window.addEventListener('resize', adjustPadding);
@@ -361,15 +375,15 @@
             conversationsArray.forEach(singleConversation => {
                 let conversationDate = new Date(singleConversation.created_at);
                 let conversationHtml = `
-                            <div class="list-item hoverable p-2 p-lg-3 mb-2">
+                            <div class="list-item hoverable p-2 p-lg-3">
                                 <div class="d-flex align-items-center">
                                     <div class="d-flex flex-column flex-grow-1 mr-2">
                                         <a class="text-muted text-hover-primary sidebar-title" title="${singleConversation.title}" onclick="handleSidebarItemClick('${singleConversation.id}', this)">
                                             <span class="text-dark-75 mb-0 history-file-name">${singleConversation.title}</span>
                                         </a>
-                                        <a class="text-muted text-hover-danger delete-btn" onclick="historyDelete('${singleConversation.id}', this)">
-                                            <span class="mb-0 history-file-name"><i class="fa-solid fa-trash"></i></span>
-                                        </a>
+                                        <span class="text-hover-danger delete-btn" onclick="historyDelete('${singleConversation.id}', this)">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </span>
                                     </div>
                                 </div>
                             </div>`;
