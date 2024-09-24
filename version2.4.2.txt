@@ -1,2 +1,6 @@
 1. In this version, we have introduced a new feature that sidebar content is dynamic and it can be shown on the chat box.
 2. And from their user can see the previous data, and user can communicate with AI from the last msg of the conversation.
+
+V2.4.2
+
+1. Delete button UI has incorporated.

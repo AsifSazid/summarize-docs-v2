@@ -19,6 +19,24 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="{{ asset('assets/css/master.css') }}">
     @stack('css')
+
+    <style>
+        .sidebar-title{
+            cursor: pointer;
+        }
+        .delete-btn {
+            display: none;
+            cursor: pointer;
+        }
+        .delete-btn:hover {
+            color: #f64e60 !important;
+        }
+
+        .list-item.hoverable:hover .delete-btn {
+            display: block;
+            /* Show delete button on hover */
+        }
+    </style>
 </head>
 
 <body id="kt_body"
@@ -341,71 +359,74 @@
 
             // Iterate through the conversations and categorize them
             conversationsArray.forEach(conversation => {
-                    let conversationDate = new Date(conversation.created_at);
-                    let conversationHtml = `
-                            <div class="list-item hoverable p-2 p-lg-3 mb-2" onclick="handleSidebarItemClick('${conversation.id}', this)">
+                let conversationDate = new Date(conversation.created_at);
+                let conversationHtml = `
+                            <div class="list-item hoverable p-2 p-lg-3 mb-2">
                                 <div class="d-flex align-items-center">
                                     <div class="d-flex flex-column flex-grow-1 mr-2">
-                                        <a class="text-muted text-hover-primary" title="${conversation.title}">
+                                        <a class="text-muted text-hover-primary sidebar-title" title="${conversation.title}" onclick="handleSidebarItemClick('${conversation.id}', this)">
                                             <span class="text-dark-75 mb-0 history-file-name">${conversation.title}</span>
+                                        </a>
+                                        <a class="text-muted text-hover-danger delete-btn">
+                                            <span class="mb-0 history-file-name"><i class="fa-solid fa-trash"></i></span>
                                         </a>
                                     </div>
                                 </div>
                             </div>`;
 
-                    // Check if the conversation is from today
-                    if (conversationDate >= today) {
-                        // Append to today's list
-                        todayListContainer.innerHTML += conversationHtml;
-                        todayConversationsCount++;
-                    } else {
-                        // Append to the previous 30 days list
-                        previousListContainer.innerHTML += conversationHtml;
-                        previousConversationsCount++;
-                    }
-                });
-
-                // Conditionally show or hide the "Previous 30 Days" section
-                if (todayConversationsCount === 0) {
-                    todaysTitle.style.display = 'none'; // Hide the title
-                    todayListContainer.style.display = 'none'; // Hide the list
+                // Check if the conversation is from today
+                if (conversationDate >= today) {
+                    // Append to today's list
+                    todayListContainer.innerHTML += conversationHtml;
+                    todayConversationsCount++;
                 } else {
-                    todaysTitle.style.display = 'block'; // Show the title
-                    todayListContainer.style.display = 'block'; // Show the list
+                    // Append to the previous 30 days list
+                    previousListContainer.innerHTML += conversationHtml;
+                    previousConversationsCount++;
                 }
+            });
 
-
-                if (previousConversationsCount === 0) {
-                    previousDaysTitle.style.display = 'none'; // Hide the title
-                    previousListContainer.style.display = 'none'; // Hide the list
-                } else {
-                    previousDaysTitle.style.display = 'block'; // Show the title
-                    previousListContainer.style.display = 'block'; // Show the list
-                }
-
-                // Conditionally show the "Load More" button if there are 6 or more conversations
-                if (conversationsArray.length >= 6) {
-                    loadMoreButton.style.display = 'block'; // Show the button
-                } else {
-                    loadMoreButton.style.display = 'none'; // Hide the button
-                }
-            }
-
-            // Function to toggle hover effect on click
-            function toggleHover(element) {
-                // Remove hover from all items
-                document.querySelectorAll('.list-item.hoverable').forEach(item => {
-                    item.classList.remove('hover');
-                });
-
-                // Add hover effect to the clicked item
-                element.classList.add('hover');
+            // Conditionally show or hide the "Previous 30 Days" section
+            if (todayConversationsCount === 0) {
+                todaysTitle.style.display = 'none'; // Hide the title
+                todayListContainer.style.display = 'none'; // Hide the list
+            } else {
+                todaysTitle.style.display = 'block'; // Show the title
+                todayListContainer.style.display = 'block'; // Show the list
             }
 
 
+            if (previousConversationsCount === 0) {
+                previousDaysTitle.style.display = 'none'; // Hide the title
+                previousListContainer.style.display = 'none'; // Hide the list
+            } else {
+                previousDaysTitle.style.display = 'block'; // Show the title
+                previousListContainer.style.display = 'block'; // Show the list
+            }
 
-            // Call the render function to display the conversations on page load
-            renderConversations();
+            // Conditionally show the "Load More" button if there are 6 or more conversations
+            if (conversationsArray.length >= 6) {
+                loadMoreButton.style.display = 'block'; // Show the button
+            } else {
+                loadMoreButton.style.display = 'none'; // Hide the button
+            }
+        }
+
+        // Function to toggle hover effect on click
+        function toggleHover(element) {
+            // Remove hover from all items
+            document.querySelectorAll('.list-item.hoverable').forEach(item => {
+                item.classList.remove('hover');
+            });
+
+            // Add hover effect to the clicked item
+            element.classList.add('hover');
+        }
+
+
+
+        // Call the render function to display the conversations on page load
+        renderConversations();
     </script>
 
 </body>
