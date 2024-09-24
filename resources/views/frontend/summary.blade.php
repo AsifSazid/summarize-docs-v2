@@ -156,7 +156,8 @@
                 messages: [],
                 created_at: '',
                 updated_at: '',
-                title: ''
+                title: '',
+                extracted_text: '',
             };
             // Testing for Loacally Store Data Ends Here
             // Function to handle file uploads and drag-and-drop
@@ -188,16 +189,40 @@
             }
 
             // Update URL with generated UUID
-            function updateURLWithUUID() {
-                const uuid = generateUUID();
-                conversation.id = uuid;
-                const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname +
-                    '?conversation=' + uuid;
+            function updateURLWithUUID(cuid) {
+                if (cuid) {
+                    console.log('cuid: ' + cuid);
 
-                // Update the URL without reloading the page
-                history.pushState({
-                    path: newUrl
-                }, '', newUrl);
+                    let conversationData = localStorage.getItem('history-' + cuid);
+
+                    let formattedConversationData = JSON.parse(conversationData);
+
+                    const extractedText = formattedConversationData.extracted_text;
+
+                    chatTitle.innerHTML = '';
+                    titleChange(formattedConversationData.title);
+
+                    storeExtractedTextInSession(extractedText);
+
+                    conversation.id = cuid;
+                    const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname +
+                        '?conversation=' + cuid;
+                    history.pushState({
+                        path: newUrl
+                    }, '', newUrl);
+                } else {
+                    // If cuid is empty, generate a new UUID and update the conversation ID and URL
+                    const uuid = generateUUID();
+                    console.log('uuid: ' + uuid);
+                    conversation.id = uuid;
+                    const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname +
+                        '?conversation=' + uuid;
+
+                    // Update the URL without reloading the page
+                    history.pushState({
+                        path: newUrl
+                    }, '', newUrl);
+                }
             }
 
 
@@ -207,9 +232,19 @@
 
             let extractDocText = '';
 
-            // Click event to open file dialog
             fileDropArea.addEventListener('click', () => {
-                fileInput.click();
+                const targetUrl = window.location.origin + '/get-summary';
+                if (window.location.href !== targetUrl) {
+                    // confirm("Are you sure you want to Start a new chat");
+                    setTimeout(() => {
+                        window.location.href = targetUrl;
+                    }, 100);
+                    fileInput.click();
+                }else{
+                    fileInput.click();
+                }
+
+
             });
 
             // Drag and Drop functionality
@@ -365,7 +400,7 @@
                     const result = await response.json();
                     extractDocText = result.extracted_text;
 
-                    addMessage(result, 'bot-message', 'bot')
+                    conversation.extracted_text = extractDocText;
 
                     storeExtractedTextInSession(extractDocText);
 
@@ -447,7 +482,6 @@
 
                     // Check if the result contains a valid answer
                     if (apiResult.answer) {
-                        addMessage(apiResult.answer, 'bot-message', 'bot');
                         simulateTypingEffect(apiResult);
                     } else {
                         simulateTypingEffect("Sorry, I couldn't find an answer to your query. Please try again.");
@@ -495,8 +529,7 @@
 
                 renderConversations();
 
-                if(sender != 'bot')
-                {
+                if (sender != 'bot') {
                     const messageDiv = document.createElement('div');
                     messageDiv.classList.add('chat-bubble', className);
                     const avatar = document.createElement('img');
@@ -579,6 +612,8 @@
                 let tempDiv = document.createElement("div");
                 tempDiv.innerHTML = formattedText;
                 let nodes = Array.from(tempDiv.childNodes);
+
+                addMessage(formattedText, 'bot-message', 'bot');
 
                 // Create a blinking cursor element
                 const cursor = document.createElement('span');
@@ -702,49 +737,55 @@
                 resetConversation(); // Call the reset function
             });
 
-            // function handleSidebarItemClick(conversationId) {
-            //     // Retrieve the conversation data from localStorage
-            //     let conversationData = localStorage.getItem("history-" + conversationId);
+            function handleSidebarItemClick(conversationId, element) {
+                // Retrieve the conversation data from localStorage
+                let conversationData = localStorage.getItem("history-" + conversationId);
 
-            //     if (conversationData) {
-            //         let conversation = JSON.parse(conversationData);
-            //         displayMessagesInChatWindow(conversation.messages);
-            //         userInput.value = ''; // Clear input field for new messages
-            //         conversation.id = conversationId; // Set the current conversation id for future messages
+                if (conversationData) {
+                    let conversation = JSON.parse(conversationData);
+                    displayMessagesInChatWindow(conversation.messages, conversationId);
+                    userInput.value = ''; // Clear input field for new messages
+                    conversation.id = conversationId; // Set the current conversation id for future messages
 
-            //         // Remove the selected class from all items
-            //         document.querySelectorAll('.list-item').forEach(item => {
-            //             item.classList.remove('selected'); // Assuming you add a CSS class for selected items
-            //         });
+                    // Remove the selected class from all items
+                    document.querySelectorAll('.list-item').forEach(item => {
+                        item.classList.remove('selected'); // Assuming you add a CSS class for selected items
+                    });
 
-            //         // Add the selected class to the clicked item
-            //         element.classList.add('selected');
-            //     }
-            // }
+                    // Add the selected class to the clicked item
+                    element.classList.add('selected');
+                }
+            }
 
-            // function displayMessagesInChatWindow(messages) {
-            //     chatWindow.innerHTML = ''; // Clear the current chat window
 
-            //     messages.forEach(message => {
-            //         let messageHtml = `
-            //             <div class="chat-bubble ${message.sender === 'user' ? 'user-message' : 'bot-message'}">
-            //                 <img class="chat-avatar" src="${message.sender === 'bot' ? 'assets/media/chatbot/ai-chatbot-4.png' : 'assets/media/users/100_12.jpg'}" alt="Avatar">
-            //                 <div class="content-container">
-            //                     <div class="chat-text">${message.text}</div>
-            //                 </div>
-            //             </div>
-            //         `;
-            //         chatWindow.innerHTML += messageHtml; // Append each message to the chat window
-            //     });
+            function displayMessagesInChatWindow(messages, cuid) {
+                chatWindow.innerHTML = ''; // Clear the current chat window
 
-            //     chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to the bottom
+                messages.forEach(message => {
+                    let messageHtml = `
+                        <div class="chat-bubble ${message.sender === 'user' ? 'user-message' : 'bot-message'}">
+                            <img class="chat-avatar" src="${message.sender === 'bot' ? 'assets/media/chatbot/ai-chatbot-4.png' : 'assets/media/users/100_12.jpg'}" alt="Avatar">
+                            <div class="content-container">
+                                <div class="chat-text">${message.text}</div>
+                            </div>
+                        </div>
+                    `;
+                    chatWindow.innerHTML += messageHtml; // Append each message to the chat window
+                });
 
-            //     submitButton.disabled = false;
+                chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to the bottom
 
-            //     suggestedButtons.forEach(button => {
-            //         button.disabled = false;
-            //     });
-            // }
+                submitButton.disabled = false;
+
+                suggestedButtons.forEach(button => {
+                    button.disabled = false;
+                });
+
+                console.log(cuid);
+
+
+                updateURLWithUUID(cuid);
+            }
         </script>
     @endpush
 
