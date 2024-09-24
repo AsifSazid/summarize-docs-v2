@@ -418,6 +418,7 @@
                     }
 
                     const result = await response.json();
+
                     extractDocText = result.extracted_text;
 
                     // Show typing indicator while the bot is "thinking"
@@ -494,20 +495,22 @@
 
                 renderConversations();
 
-                // Add message to the chat window
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add('chat-bubble', className);
-                const avatar = document.createElement('img');
-                avatar.classList.add('chat-avatar');
-                avatar.src = sender === 'user' ? 'assets/media/users/100_12.jpg' : 'assets/media/chatbot/ai-chatbot-4.png';
-                const textDiv = document.createElement('div');
-                textDiv.classList.add('chat-text');
-                textDiv.innerText = message;
+                if(sender != 'bot')
+                {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.classList.add('chat-bubble', className);
+                    const avatar = document.createElement('img');
+                    avatar.classList.add('chat-avatar');
+                    avatar.src = sender === 'user' ? 'assets/media/users/100_12.jpg' : 'assets/media/chatbot/ai-chatbot-4.png';
+                    const textDiv = document.createElement('div');
+                    textDiv.classList.add('chat-text');
+                    textDiv.innerText = message;
+                    messageDiv.appendChild(avatar);
+                    messageDiv.appendChild(textDiv);
+                    chatWindow.appendChild(messageDiv);
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+                }
 
-                messageDiv.appendChild(avatar);
-                messageDiv.appendChild(textDiv);
-                chatWindow.appendChild(messageDiv);
-                chatWindow.scrollTop = chatWindow.scrollHeight;
             }
 
 
@@ -669,6 +672,13 @@
                 });
             });
 
+            window.onload = function() {
+                const targetUrl = window.location.origin + '/get-summary'; // Replace 'your-path' with your desired path
+                if (window.location.href !== targetUrl) {
+                    window.location.href = targetUrl; // Redirect only if not already on the target URL
+                }
+            };
+
             function resetConversation() {
                 hasReset = true;
 
@@ -692,40 +702,49 @@
                 resetConversation(); // Call the reset function
             });
 
-            function handleSidebarItemClick(conversationId) {
-                // Retrieve the conversation data from localStorage
-                let conversationData = localStorage.getItem("history-" + conversationId);
+            // function handleSidebarItemClick(conversationId) {
+            //     // Retrieve the conversation data from localStorage
+            //     let conversationData = localStorage.getItem("history-" + conversationId);
 
-                if (conversationData) {
-                    let conversation = JSON.parse(conversationData);
-                    displayMessagesInChatWindow(conversation.messages);
-                    userInput.value = ''; // Clear input field for new messages
-                    conversation.id = conversationId; // Set the current conversation id for future messages
+            //     if (conversationData) {
+            //         let conversation = JSON.parse(conversationData);
+            //         displayMessagesInChatWindow(conversation.messages);
+            //         userInput.value = ''; // Clear input field for new messages
+            //         conversation.id = conversationId; // Set the current conversation id for future messages
 
-                    // Remove the selected class from all items
-                    document.querySelectorAll('.list-item').forEach(item => {
-                        item.classList.remove('selected'); // Assuming you add a CSS class for selected items
-                    });
+            //         // Remove the selected class from all items
+            //         document.querySelectorAll('.list-item').forEach(item => {
+            //             item.classList.remove('selected'); // Assuming you add a CSS class for selected items
+            //         });
 
-                    // Add the selected class to the clicked item
-                    element.classList.add('selected');
-                }
-            }
+            //         // Add the selected class to the clicked item
+            //         element.classList.add('selected');
+            //     }
+            // }
 
-            function displayMessagesInChatWindow(messages) {
-                chatWindow.innerHTML = ''; // Clear the current chat window
+            // function displayMessagesInChatWindow(messages) {
+            //     chatWindow.innerHTML = ''; // Clear the current chat window
 
-                messages.forEach(message => {
-                    let messageHtml = `
-                        <div class="message ${message.sender}">
-                            <span>${message.text}</span>
-                        </div>
-                    `;
-                    chatWindow.innerHTML += messageHtml; // Append each message
-                });
+            //     messages.forEach(message => {
+            //         let messageHtml = `
+            //             <div class="chat-bubble ${message.sender === 'user' ? 'user-message' : 'bot-message'}">
+            //                 <img class="chat-avatar" src="${message.sender === 'bot' ? 'assets/media/chatbot/ai-chatbot-4.png' : 'assets/media/users/100_12.jpg'}" alt="Avatar">
+            //                 <div class="content-container">
+            //                     <div class="chat-text">${message.text}</div>
+            //                 </div>
+            //             </div>
+            //         `;
+            //         chatWindow.innerHTML += messageHtml; // Append each message to the chat window
+            //     });
 
-                chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to the bottom
-            }
+            //     chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to the bottom
+
+            //     submitButton.disabled = false;
+
+            //     suggestedButtons.forEach(button => {
+            //         button.disabled = false;
+            //     });
+            // }
         </script>
     @endpush
 
