@@ -330,8 +330,8 @@
 
                 if (key.startsWith("history-")) {
                     let conversationData = localStorage.getItem(key);
-                    let conversation = JSON.parse(conversationData);
-                    allConversations.push(conversation);
+                    let allConversation = JSON.parse(conversationData);
+                    allConversations.push(allConversation);
                 }
             }
 
@@ -358,16 +358,16 @@
             let previousConversationsCount = 0;
 
             // Iterate through the conversations and categorize them
-            conversationsArray.forEach(conversation => {
-                let conversationDate = new Date(conversation.created_at);
+            conversationsArray.forEach(singleConversation => {
+                let conversationDate = new Date(singleConversation.created_at);
                 let conversationHtml = `
                             <div class="list-item hoverable p-2 p-lg-3 mb-2">
                                 <div class="d-flex align-items-center">
                                     <div class="d-flex flex-column flex-grow-1 mr-2">
-                                        <a class="text-muted text-hover-primary sidebar-title" title="${conversation.title}" onclick="handleSidebarItemClick('${conversation.id}', this)">
-                                            <span class="text-dark-75 mb-0 history-file-name">${conversation.title}</span>
+                                        <a class="text-muted text-hover-primary sidebar-title" title="${singleConversation.title}" onclick="handleSidebarItemClick('${singleConversation.id}', this)">
+                                            <span class="text-dark-75 mb-0 history-file-name">${singleConversation.title}</span>
                                         </a>
-                                        <a class="text-muted text-hover-danger delete-btn">
+                                        <a class="text-muted text-hover-danger delete-btn" onclick="historyDelete('${singleConversation.id}', this)">
                                             <span class="mb-0 history-file-name"><i class="fa-solid fa-trash"></i></span>
                                         </a>
                                     </div>

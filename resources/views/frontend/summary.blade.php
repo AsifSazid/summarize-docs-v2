@@ -149,18 +149,16 @@
 
     @push('js')
         <script>
-            // Testing for Loacally Store Data Starts Here
             let msg = {};
-            let conversation = {
+            let toBStoredConversation = {
                 id: '',
                 messages: [],
                 created_at: '',
                 updated_at: '',
-                title: '',
                 extracted_text: '',
             };
-            // Testing for Loacally Store Data Ends Here
-            // Function to handle file uploads and drag-and-drop
+
+            let activeConversation = null;
             const fileDropArea = document.getElementById('file-upload');
             const fileInput = document.getElementById('fileInput');
             const responseBody = document.getElementById('responseBody');
@@ -191,7 +189,6 @@
             // Update URL with generated UUID
             function updateURLWithUUID(cuid) {
                 if (cuid) {
-                    console.log('cuid: ' + cuid);
 
                     let conversationData = localStorage.getItem('history-' + cuid);
 
@@ -204,17 +201,17 @@
 
                     storeExtractedTextInSession(extractedText);
 
-                    conversation.id = cuid;
+                    toBStoredConversation.id = cuid;
                     const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname +
                         '?conversation=' + cuid;
+
                     history.pushState({
                         path: newUrl
                     }, '', newUrl);
                 } else {
                     // If cuid is empty, generate a new UUID and update the conversation ID and URL
                     const uuid = generateUUID();
-                    console.log('uuid: ' + uuid);
-                    conversation.id = uuid;
+                    toBStoredConversation.id = uuid;
                     const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname +
                         '?conversation=' + uuid;
 
@@ -240,7 +237,7 @@
                         window.location.href = targetUrl;
                     }, 100);
                     fileInput.click();
-                }else{
+                } else {
                     fileInput.click();
                 }
 
@@ -344,10 +341,13 @@
                 if (files.length > 0) {
                     try {
                         const file = files[0];
-                        const fileName = file.name;
 
-                        conversation.title = fileName;
-                        conversation.created_at = Date.now();
+                        fileName = file.name;
+
+                        if (activeConversation === null || activeConversation === false) {
+                            toBStoredConversation.title = fileName;
+                            toBStoredConversation.created_at = Date.now();
+                        }
 
                         // Show the file name as a message in the user's chat bubble
                         addMessage(`Uploaded file: ${file.name}`, 'user-message', 'user');
@@ -400,13 +400,9 @@
                     const result = await response.json();
                     extractDocText = result.extracted_text;
 
-                    conversation.extracted_text = extractDocText;
+                    toBStoredConversation.extracted_text = extractDocText;
 
                     storeExtractedTextInSession(extractDocText);
-
-                    // Testing for Loacally Store Data Starts Here
-
-                    // Testing for Loacally Store Data Ends Here
 
                     if (result.summary) {
                         simulateTypingEffect(result);
@@ -495,37 +491,18 @@
                 }
             }
 
-            // Add messages to chat window
-            // function addMessage(message, className, sender) {
-            //     const messageDiv = document.createElement('div');
-            //     messageDiv.classList.add('chat-bubble', className);
-
-            //     const avatar = document.createElement('img');
-            //     avatar.classList.add('chat-avatar');
-            //     avatar.src = sender === 'user' ? 'assets/media/users/100_12.jpg' : 'assets/media/chatbot/ai-chatbot-4.png';
-
-            //     const textDiv = document.createElement('div');
-            //     textDiv.classList.add('chat-text');
-            //     textDiv.innerText = message;
-
-            //     messageDiv.appendChild(avatar);
-            //     messageDiv.appendChild(textDiv);
-            //     chatWindow.appendChild(messageDiv);
-            //     chatWindow.scrollTop = chatWindow.scrollHeight;
-            // }
             function addMessage(message, className, sender) {
                 const msg = {
-                    conversation_id: conversation.id,
+                    conversation_id: toBStoredConversation.id,
                     timestamp: Date.now(),
                     sender: sender,
                     text: message
                 };
+                toBStoredConversation.messages.push(msg); // Add message to the conversation
+                toBStoredConversation.updated_at = Date.now(); // Update the timestamp
 
-                conversation.messages.push(msg); // Add message to the conversation
-                conversation.updated_at = Date.now(); // Update the timestamp
+                localStorage.setItem("history-" + toBStoredConversation.id, JSON.stringify(toBStoredConversation));
 
-                // Save the updated conversation to localStorage
-                localStorage.setItem("history-" + conversation.id, JSON.stringify(conversation));
 
                 renderConversations();
 
@@ -742,10 +719,14 @@
                 let conversationData = localStorage.getItem("history-" + conversationId);
 
                 if (conversationData) {
-                    let conversation = JSON.parse(conversationData);
-                    displayMessagesInChatWindow(conversation.messages, conversationId);
+                    let handledConversation = JSON.parse(conversationData);
+
+                    activeConversation = true;
+                    toBStoredConversation.title = handledConversation.title;
+
+                    displayMessagesInChatWindow(handledConversation.messages, conversationId);
                     userInput.value = ''; // Clear input field for new messages
-                    conversation.id = conversationId; // Set the current conversation id for future messages
+                    handledConversation.id = conversationId; // Set the current conversation id for future messages
 
                     // Remove the selected class from all items
                     document.querySelectorAll('.list-item').forEach(item => {
@@ -755,6 +736,24 @@
                     // Add the selected class to the clicked item
                     element.classList.add('selected');
                 }
+            }
+
+            function historyDelete(conversationId, element) {
+                let conversationData = localStorage.getItem("history-" + conversationId);
+
+                if (conversationData) {
+                    const userConfirmed = confirm("Are you sure you want to delete this conversation?");
+
+                    if (userConfirmed) {
+                        localStorage.removeItem("history-" + conversationId);
+                        const targetUrl = window.location.origin + '/get-summary';
+
+                        setTimeout(() => {
+                            window.location.href = targetUrl; // Redirect after deletion
+                        }, 100);
+                    }
+                }
+
             }
 
 
@@ -780,8 +779,6 @@
                 suggestedButtons.forEach(button => {
                     button.disabled = false;
                 });
-
-                console.log(cuid);
 
 
                 updateURLWithUUID(cuid);

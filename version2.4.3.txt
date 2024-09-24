@@ -4,3 +4,8 @@
 V2.4.2
 
 1. Delete button UI has incorporated.
+
+V2.4.3
+
+1. All small bugs are removed for pc compatibility
+
