@@ -124,8 +124,14 @@
                                 <div class="__lock-box counting-area">
                                     <div class="__counting-area counting">
                                         <div class="__counting counter-holder">
-                                            <p class="__counter-holder count-docs"> <span
-                                                    id="dataCountForStorage"></span> / 5</p>
+                                            <p class="__counter-holder count-docs">
+                                                <span id="dataCountForStorage"></span>
+                                                @if (auth()->user())
+                                                    / 10
+                                                @else
+                                                    / 5
+                                                @endif
+                                            </p>
                                             <span class="__counter-holder count-text">documents uploaded</span>
                                         </div>
                                         <span class="__counting counting-progress" role="progressbar"
@@ -319,15 +325,37 @@
         function adjustProgressBar() {
             let dataCountForStorage = document.getElementById('dataCountForStorage');
             let progressBars = document.getElementsByClassName('main-pr-bar'); // Get elements by class name
+            let lockSection = document.querySelector('.__aside.lock-section'); // Select lock-section element
 
-            if (progressBars.length > 0) { // Check if there is at least one element
-                let progressBar = progressBars[0]; // Access the first element in the collection
-                dataCountForStorage.innerHTML = localStorage.length; // Update the data count display
-                progressBar.style.width = (localStorage.length) * 20 + '%'; // Adjust progress bar width
-            } else {
-                console.warn("No elements found with class 'main-pr-bar'.");
-            }
+            let authUser = @json(auth()->user());
+
+            // Initially hide lock-section
+            lockSection.classList.remove('active');
+
+            // Simulate data loading or delay
+            setTimeout(() => {
+                lockSection.classList.add('active'); // Show with transition after delay
+
+                if (authUser) {
+                    if (progressBars.length > 0) {
+                        let progressBar = progressBars[0];
+                        dataCountForStorage.innerHTML = localStorage.length;
+                        progressBar.style.width = (localStorage.length) * 10 + '%';
+                    } else {
+                        console.warn("No elements found with class 'main-pr-bar'.");
+                    }
+                } else {
+                    if (progressBars.length > 0) {
+                        let progressBar = progressBars[0];
+                        dataCountForStorage.innerHTML = localStorage.length;
+                        progressBar.style.width = (localStorage.length) * 20 + '%';
+                    } else {
+                        console.warn("No elements found with class 'main-pr-bar'.");
+                    }
+                }
+            }, 500); // Delay to simulate loading, adjust as needed
         }
+
 
         adjustProgressBar();
 

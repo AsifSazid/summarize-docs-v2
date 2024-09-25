@@ -278,3 +278,12 @@
     /* padding: 1px 0px !important; */
     background-color: #f6f6f9
 }
+
+.logout-btn{
+    color: #F64E60 !important;
+    cursor: pointer;
+}
+
+.logout-btn:hover{
+    color: #dc3545 !important;
+}

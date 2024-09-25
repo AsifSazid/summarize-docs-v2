@@ -12,3 +12,8 @@ V2.4.3
 V2.4.4
 
 1. Maximum 5 data can be stored in the local storage.
+
+V2.4.5
+
+1. Authentication is applied on the progress bar for get extra 5 chances to get summary of the PDF file.
+2. In progress bar, transition is applied for looking smooth.

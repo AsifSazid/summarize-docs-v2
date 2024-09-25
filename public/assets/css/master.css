@@ -19,15 +19,6 @@
 }
 
 @font-face {
-    font-family: __Roboto_8032a8;
-    font-style: normal;
-    font-weight: 700;
-    font-display: swap;
-    src: url(/_next/static/media/6ebb97b5c9fa4e03-s.p.woff2) format("woff2");
-    unicode-range: u+00??, u+0131, u+0152-0153, u+02bb-02bc, u+02c6, u+02da, u+02dc, u+0304, u+0308, u+0329, u+2000-206f, u+2074, u+20ac, u+2122, u+2191, u+2193, u+2212, u+2215, u+feff, u+fffd
-}
-
-@font-face {
     font-family: __Roboto_Fallback_8032a8;
     src: local("Arial");
     ascent-override: 92.98%;
@@ -71,9 +62,15 @@
     vertical-align: bottom;
 }
 
-.lock-section {
+.__aside.lock-section {
     width: 100%;
     margin-top: 16px;
+    transition: all 0.5s ease-in-out; /* Apply transition to all properties */
+    opacity: 0; /* Start with hidden or 0 opacity */
+}
+
+.__aside.lock-section.active {
+    opacity: 1; /* When active, make it visible */
 }
 
 .lock-box {
@@ -199,7 +196,7 @@
     left: 0px;
     bottom: 0px;
     top: 0px;
-    transition: transform 0.4s linear;
+    transition: width 1s ease-in-out !important;
     transform-origin: left center;
     background-color: rgb(186, 26, 26);
 }

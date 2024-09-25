@@ -50,11 +50,11 @@
                             <!--begin::Navigation-->
                             <ul class="navi navi-hover">
                                 <li class="navi-header font-weight-bold py-4">
-                                    <div
-                                        class="user-identity d-sm-flex flex-column justify-content-center me-2 me-md-4">
-                                        <span class="fs-8 fw-bold lh-1"><strong>Asif M Sazid
-                                                Tappware</strong></span>
-                                        <span class="opacity-75 fs-8 lh-1 mb-1">GUEST</span>
+                                    <div class="user-identity d-sm-flex flex-row justify-content-center me-2 me-md-4">
+                                        <span class="fw-bold lh-1 mt-2"
+                                            style="font-size: 1.2rem;"><strong>{{ auth()->user()->name }}</strong></span>
+                                        <span class="badge rounded-pill bg-info text-dark opacity-75 ml-2 mb-4"
+                                            style="font-size: 0.6rem">GUEST</span>
                                     </div>
                                 </li>
                                 <li class="navi-header font-weight-bold py-4">
@@ -64,7 +64,14 @@
                                     <span class="font-size-lg">Upgrade</span>
                                 </li>
                                 <li class="navi-header font-weight-bold py-4">
-                                    <span class="font-size-lg">Logout</span>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <a class="logout-btn" :href="route('logout')"
+                                            onclick="event.preventDefault();
+                                                            this.closest('form').submit();">
+                                            {{ __('Log Out') }}
+                                        </a>
+                                    </form>
                                 </li>
                             </ul>
                             <!--end::Navigation-->
@@ -112,8 +119,10 @@
                 <div class="card-footer px-5 py-1">
                     <div class="suggested-button-section d-flex flex-wrap mb-3">
                         <button type="button" class="btn btn-outline-secondary m-2 suggested-button">Summarize</button>
-                        <button type="button" class="btn btn-outline-secondary m-2 suggested-button">Highlight</button>
-                        <button type="button" class="btn btn-outline-secondary m-2 suggested-button">Simplify</button>
+                        <button type="button"
+                            class="btn btn-outline-secondary m-2 suggested-button">Highlight</button>
+                        <button type="button"
+                            class="btn btn-outline-secondary m-2 suggested-button">Simplify</button>
                         <button type="button" class="btn btn-outline-secondary m-2 suggested-button">Enhance</button>
                         <button type="button"
                             class="btn btn-outline-secondary m-2 suggested-button">Critique</button>
