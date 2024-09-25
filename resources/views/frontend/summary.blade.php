@@ -99,7 +99,8 @@
                                 <i class="fa-solid fa-arrows-rotate"></i>
                             </a>
                         </div>
-                        <div data-bs-toggle="tooltip" data-original-title="Share Conversation" data-bs-placement="left">
+                        <div data-bs-toggle="tooltip" data-original-title="Share Conversation" data-bs-placement="left"
+                            onclick="shareConversation()">
                             <a class="btn btn-outline-secondary text-center" aria-haspopup="true">
                                 <i class="fa-regular fa-share-from-square"></i>
                             </a>
@@ -159,9 +160,11 @@
                 display: none;
                 padding: 0.5rem;
             }
-            .copy-btn i{
+
+            .copy-btn i {
                 font-size: 1rem !important;
             }
+
             .content-container:hover .copy-btn {
                 display: block;
             }
@@ -194,6 +197,7 @@
             const attachmentButton = document.querySelector('.__chat-form-attachment');
             const offcanvasUploadButton = document.querySelector('.__offcanvas-new-file-upload-section');
             const offcanvasFileInput = document.querySelector('#offcanvasFileInput');
+            const targetUrl = window.location.origin + '/get-summary';
             let hasReset = false;
 
             window.addEventListener('load', () => {
@@ -252,7 +256,6 @@
             let extractDocText = '';
 
             fileDropArea.addEventListener('click', () => {
-                const targetUrl = window.location.origin + '/get-summary';
                 if (window.location.href !== targetUrl) {
                     // confirm("Are you sure you want to Start a new chat");
                     setTimeout(() => {
@@ -672,10 +675,28 @@
                 textarea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textarea);
-                alert('Copied to clipboard!');
+
+                // showToast('Copied to clipboard!'); // Show toast instead of alert
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": true,
+                    "progressBar": false,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                };
+
+                toastr.success("Copied to clipboard!", "Action");
             }
-
-
 
             function showSuggestedQueries(queries, container) {
                 let queryIndex = 0;
@@ -747,7 +768,7 @@
             });
 
             window.onload = function() {
-                const targetUrl = window.location.origin + '/get-summary'; // Replace 'your-path' with your desired path
+                // Replace 'your-path' with your desired path
                 if (window.location.href !== targetUrl) {
                     window.location.href = targetUrl; // Redirect only if not already on the target URL
                 }
@@ -808,7 +829,6 @@
 
                     if (userConfirmed) {
                         localStorage.removeItem("history-" + conversationId);
-                        const targetUrl = window.location.origin + '/get-summary';
 
                         setTimeout(() => {
                             window.location.href = targetUrl; // Redirect after deletion
@@ -844,6 +864,35 @@
 
 
                 updateURLWithUUID(cuid);
+            }
+
+            function shareConversation() {
+                toBeShareUrl = targetUrl + '?conversation=' + toBStoredConversation.id;
+                const textarea = document.createElement('textarea');
+                textarea.value = toBeShareUrl;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": true,
+                    "progressBar": false,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                };
+
+                toastr.success("URL copied to share!", "Action");
             }
         </script>
     @endpush

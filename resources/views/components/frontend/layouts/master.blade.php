@@ -310,6 +310,7 @@
     <script src="{{ asset('assets') }}/plugins/custom/prismjs/prismjs.bundle.js"></script>
     <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
     <script src="{{ asset('assets/js/pages/custom/todo/todo.js') }}"></script>
+    <script src="{{ asset('assets/js/pages/features/miscellaneous/toastr.js') }}"></script>
 
     @stack('js')
 
