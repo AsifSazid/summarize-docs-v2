@@ -35,3 +35,13 @@ a. conversation are not be stored at the moment.
 b. conversation limit are not allowed now.
 
 That's should be introduced in the future again. From version 2.4.6 they are not allowed.
+
+V2.4.9
+
+1. Share option is available now by copying the url and data is showing properly.
+
+Note:
+a. conversation are not be stored at the moment.
+b. conversation limit are not allowed now.
+
+That's should be introduced in the future again. From version 2.4.6 they are not allowed.

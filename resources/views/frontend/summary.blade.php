@@ -768,9 +768,24 @@
             });
 
             window.onload = function() {
-                // Replace 'your-path' with your desired path
-                if (window.location.href !== targetUrl) {
-                    window.location.href = targetUrl; // Redirect only if not already on the target URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const conversationId = urlParams.get('conversation');
+
+
+
+                // If there's a conversation ID, load the conversation page
+                if (conversationId) {
+                    let conversationData = localStorage.getItem("history-" + conversationId);
+                    let handledConversation = JSON.parse(conversationData);
+
+                    activeConversation = true;
+                    toBStoredConversation.title = handledConversation.title;
+                    displayMessagesInChatWindow(handledConversation.messages, conversationId); // Assume this is a function you implement to load the conversation
+                } else {
+                    // If not on the target URL, redirect to it
+                    if (window.location.href !== targetUrl) {
+                        window.location.href = targetUrl; // Redirect only if not already on the target URL
+                    }
                 }
             };
 
@@ -837,7 +852,6 @@
                 }
 
             }
-
 
             function displayMessagesInChatWindow(messages, cuid) {
                 chatWindow.innerHTML = ''; // Clear the current chat window
