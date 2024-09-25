@@ -154,6 +154,18 @@
 
     @push('css')
         <link rel="stylesheet" href="{{ asset('assets/css/summary.css') }}">
+        <style>
+            .copy-btn {
+                display: none;
+                padding: 0.5rem;
+            }
+            .copy-btn i{
+                font-size: 1rem !important;
+            }
+            .content-container:hover .copy-btn {
+                display: block;
+            }
+        </style>
     @endpush
 
 
@@ -603,7 +615,7 @@
 
                 // Create a copy button
                 const copyButton = document.createElement('button');
-                copyButton.classList.add('btn', 'btn-outline-secondary', 'copy-btn');
+                copyButton.classList.add('btn', 'btn-outline-secondary', 'copy-btn', 'ml-4');
 
                 // Create the Font Awesome icon
                 const icon = document.createElement('i');

@@ -21,3 +21,7 @@ V2.4.5
 V2.4.6
 
 1. Copy button is introduced, it works but properly is not supported.
+
+V2.4.7
+
+1. Copy button is properly working.
