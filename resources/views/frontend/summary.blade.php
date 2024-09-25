@@ -118,7 +118,8 @@
 
                 <div class="card-footer px-5 py-1">
                     <div class="suggested-button-section d-flex flex-wrap mb-3">
-                        <button type="button" class="btn btn-outline-secondary m-2 suggested-button">Summarize</button>
+                        <button type="button"
+                            class="btn btn-outline-secondary m-2 suggested-button">Summarize</button>
                         <button type="button"
                             class="btn btn-outline-secondary m-2 suggested-button">Highlight</button>
                         <button type="button"
@@ -501,21 +502,21 @@
             }
 
             function addMessage(message, className, sender) {
-                const msg = {
-                    conversation_id: toBStoredConversation.id,
-                    timestamp: Date.now(),
-                    sender: sender,
-                    text: message
-                };
+                // const msg = {
+                //     conversation_id: toBStoredConversation.id,
+                //     timestamp: Date.now(),
+                //     sender: sender,
+                //     text: message
+                // };
 
-                toBStoredConversation.messages.push(msg); // Add message to the conversation
-                toBStoredConversation.updated_at = Date.now(); // Update the timestamp
+                // toBStoredConversation.messages.push(msg); // Add message to the conversation
+                // toBStoredConversation.updated_at = Date.now(); // Update the timestamp
 
-                if (localStorage.length < 5) {
-                    localStorage.setItem("history-" + toBStoredConversation.id, JSON.stringify(toBStoredConversation));
-                } else {
-                    alert("Maximum row count reached.");
-                }
+                // if (localStorage.length < 5) {
+                //     localStorage.setItem("history-" + toBStoredConversation.id, JSON.stringify(toBStoredConversation));
+                // } else {
+                //     alert("Maximum row count reached.");
+                // }
 
                 adjustProgressBar();
                 renderConversations();
@@ -586,7 +587,38 @@
                 const textDiv = document.createElement('div');
                 textDiv.classList.add('chat-text');
 
+                const responseTextContent = responseText.summary || responseText.answer ||
+                    "Sorry, something went wrong. Please try again.";
+                let formattedText = textFormation(responseTextContent);
+
+                // Add text content to textDiv
+                let tempDiv = document.createElement("div");
+                tempDiv.innerHTML = formattedText;
+                let nodes = Array.from(tempDiv.childNodes);
+
+                let index = 0;
+                textDiv.id = 'response-text-' + Date.now(); // Generate a unique ID for each response
+
                 contentDiv.appendChild(textDiv);
+
+                // Create a copy button
+                const copyButton = document.createElement('button');
+                copyButton.classList.add('btn', 'btn-outline-secondary', 'copy-btn');
+
+                // Create the Font Awesome icon
+                const icon = document.createElement('i');
+                icon.classList.add('fas', 'fa-copy'); // Add Font Awesome classes for the copy icon
+                // Append the icon to the button
+                copyButton.appendChild(icon);
+
+                // Set button attributes (optional)
+                copyButton.setAttribute('aria-label', 'Copy to clipboard');
+                copyButton.onclick = function() {
+                    copyToClipboard(textDiv.id); // Call the copy function with the generated textDiv ID
+                };
+
+                // Append the textDiv and copyButton to the content container
+                contentDiv.appendChild(copyButton);
 
                 // Append the avatar and content container to the messageDiv
                 messageDiv.appendChild(avatar);
@@ -594,15 +626,6 @@
 
                 chatWindow.appendChild(messageDiv);
                 chatWindow.scrollTop = chatWindow.scrollHeight;
-
-                const responseTextContent = responseText.summary || responseText.answer ||
-                    "Sorry, something went wrong. Please try again.";
-                let formattedText = textFormation(responseTextContent);
-
-                let index = 0;
-                let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = formattedText;
-                let nodes = Array.from(tempDiv.childNodes);
 
                 addMessage(formattedText, 'bot-message', 'bot');
 
@@ -627,6 +650,19 @@
 
                 typeNextNode(); // Start typing
             }
+
+            // Copy to Clipboard function
+            function copyToClipboard(elementId) {
+                const textToCopy = document.getElementById(elementId).innerText;
+                const textarea = document.createElement('textarea');
+                textarea.value = textToCopy;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('Copied to clipboard!');
+            }
+
 
 
             function showSuggestedQueries(queries, container) {

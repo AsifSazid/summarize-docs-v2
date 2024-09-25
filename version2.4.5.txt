@@ -17,3 +17,7 @@ V2.4.5
 
 1. Authentication is applied on the progress bar for get extra 5 chances to get summary of the PDF file.
 2. In progress bar, transition is applied for looking smooth.
+
+V2.4.6
+
+1. Copy button is introduced, it works but properly is not supported.
