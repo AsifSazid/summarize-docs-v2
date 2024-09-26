@@ -57,7 +57,7 @@
                     <div class="aside-brand d-flex flex-column align-items-left flex-column-auto py-5 py-lg-12">
                         <div class="brand flex-column-auto mb-6 __brand_wrapper" id="kt_brand" kt-hidden-height="65"
                             style="">
-                            <a href="index.html" class="brand-logo __brand_logo_name">
+                            <a href="{{route('docSummary')}}" class="brand-logo __brand_logo_name">
                                 <img class="max-h-30px" alt="Logo"
                                     src="{{ asset('assets') }}/media/logos/sharly-logo.webp">
                                 <h2 class="__logo_name" style="margin: 0px !important;">Sharly</h2>
@@ -89,11 +89,11 @@
                     </div>
                     <div
                         class="aside-nav d-flex flex-column align-items-left flex-column-fluid scroll scroll-pull ps ps--active-y">
-                        <p class="p-2 p-lg-3 my-1 my-lg-3 font-size-sm todays-title"><strong>Today</strong></p>
+                        <p class="p-2 p-lg-3 my-1 my-lg-3 font-size-sm todays-title d-none"><strong>Today</strong></p>
                         <div class="list today-list"></div>
 
                         <!-- This title will be conditionally hidden -->
-                        <p class="p-2 p-lg-3 my-1 my-lg-3 font-size-sm previous-days-title"><strong>Previous 30
+                        <p class="p-2 p-lg-3 my-1 my-lg-3 font-size-sm previous-days-title d-none"><strong>Previous 30
                                 Days</strong></p>
                         <div class="list previous-list"></div>
 
@@ -431,19 +431,17 @@
 
             // Conditionally show or hide the "Previous 30 Days" section
             if (todayConversationsCount === 0) {
-                todaysTitle.style.display = 'none'; // Hide the title
                 todayListContainer.style.display = 'none'; // Hide the list
             } else {
-                todaysTitle.style.display = 'block'; // Show the title
+                todaysTitle.classList.remove('d-none'); // Show the title
                 todayListContainer.style.display = 'block'; // Show the list
             }
 
 
             if (previousConversationsCount === 0) {
-                previousDaysTitle.style.display = 'none'; // Hide the title
                 previousListContainer.style.display = 'none'; // Hide the list
             } else {
-                previousDaysTitle.style.display = 'block'; // Show the title
+                previousDaysTitle.classList.remove('d-none'); // Show the title
                 previousListContainer.style.display = 'block'; // Show the list
             }
 
