@@ -65,3 +65,13 @@ a. conversation are not be stored at the moment.
 b. conversation limit are not allowed now.
 
 That's should be introduced in the future again. From version 2.4.6 they are not allowed.
+
+V2.4.12
+
+1. Now, we can download our conversation as PDF.
+
+Note:
+a. conversation are not be stored at the moment.
+b. conversation limit are not allowed now.
+
+That's should be introduced in the future again. From version 2.4.6 they are not allowed.

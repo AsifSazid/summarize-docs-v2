@@ -30,6 +30,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::post('/get-summary-pdf-download', [SummaryDocsController::class, 'pdfDownload'])->name('docSummary.pdfDownload');
+
 Route::get('/get-summary', [SummaryDocsController::class, 'index'])->name('docSummary');
 
 Route::get('/get-extracted-text', [SummaryDocsController::class, 'getExtractedText'])->name('getExtractedText');

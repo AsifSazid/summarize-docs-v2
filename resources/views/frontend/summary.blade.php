@@ -106,7 +106,7 @@
                             </a>
                         </div>
                         <div data-bs-toggle="tooltip" data-original-title="Download Conversation"
-                            data-bs-placement="left">
+                            data-bs-placement="left" onclick="downloadConversation()">
                             <a class="btn btn-outline-secondary text-center" aria-haspopup="true">
                                 <i class="fa-solid fa-download"></i>
                             </a>
@@ -529,7 +529,7 @@
                     messageDiv.classList.add('chat-bubble', className);
                     const avatar = document.createElement('img');
                     avatar.classList.add('chat-avatar');
-                    avatar.src = sender === 'user' ? 'assets/media/users/100_12.jpg' : 'assets/media/chatbot/ai-chatbot-4.png';
+                    avatar.src = sender === 'user' ? 'assets/media/users/100_12.jpg' : 'assets/media/   /ai-chatbot-4.png';
                     const textDiv = document.createElement('div');
                     textDiv.classList.add('chat-text');
                     textDiv.innerText = message;
@@ -726,7 +726,7 @@
                     activeConversation = true;
                     toBStoredConversation.title = handledConversation.title;
                     displayMessagesInChatWindow(handledConversation.messages,
-                    conversationId); // Assume this is a function you implement to load the conversation
+                        conversationId); // Assume this is a function you implement to load the conversation
                 } else {
                     if (window.location.href !== targetUrl) {
                         window.location.href = targetUrl; // Redirect only if not already on the target URL
@@ -827,6 +827,44 @@
                 document.execCommand('copy');
                 document.body.removeChild(textarea);
                 callToaster("URL copied to share!", "Action");
+            }
+
+            function downloadConversation() {
+                const uuid = toBStoredConversation.id; // Assuming you have the UUID here
+                const conversation = localStorage.getItem("history-" + uuid); // Get the conversation from localStorage
+
+                if (conversation) {
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '/get-summary-pdf-download'; // Post to Laravel route
+                    form.target = '_blank'; // Open in a new tab
+
+                    const csrfTokenInput = document.createElement('input');
+                    csrfTokenInput.type = 'hidden';
+                    csrfTokenInput.name = '_token';
+                    csrfTokenInput.value =
+                        '{{ csrf_token() }}'; // You need to inject the CSRF token from Blade or JavaScript
+                    form.appendChild(csrfTokenInput);
+
+                    const conversationInput = document.createElement('input');
+                    conversationInput.type = 'hidden';
+                    conversationInput.name = 'conversation';
+                    conversationInput.value = conversation; // Add the conversation data
+                    form.appendChild(conversationInput);
+
+                    const uuidInput = document.createElement('input');
+                    uuidInput.type = 'hidden';
+                    uuidInput.name = 'uuid';
+                    uuidInput.value = uuid; // Add the UUID value
+                    form.appendChild(uuidInput);
+
+                    document.body.appendChild(form);
+                    form.submit();
+
+                    document.body.removeChild(form);
+                } else {
+                    alert('No conversation data found in localStorage.');
+                }
             }
         </script>
     @endpush
