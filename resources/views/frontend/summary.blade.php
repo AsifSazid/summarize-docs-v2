@@ -199,6 +199,7 @@
             const offcanvasFileInput = document.querySelector('#offcanvasFileInput');
             const targetUrl = window.location.origin + '/get-summary';
             let hasReset = false;
+            let extractDocText = '';
 
             window.addEventListener('load', () => {
                 hasReset = false; // Reset the state when the page loads
@@ -212,22 +213,16 @@
                 });
             }
 
-            // Update URL with generated UUID
             function updateURLWithUUID(cuid) {
                 if (cuid) {
-
                     let conversationData = localStorage.getItem('history-' + cuid);
-
                     let formattedConversationData = JSON.parse(conversationData);
-
                     const extractedText = formattedConversationData.extracted_text;
-
                     chatTitle.innerHTML = '';
                     titleChange(formattedConversationData.title);
-
                     storeExtractedTextInSession(extractedText);
-
                     toBStoredConversation.id = cuid;
+
                     const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname +
                         '?conversation=' + cuid;
 
@@ -235,29 +230,47 @@
                         path: newUrl
                     }, '', newUrl);
                 } else {
-                    // If cuid is empty, generate a new UUID and update the conversation ID and URL
                     const uuid = generateUUID();
                     toBStoredConversation.id = uuid;
+
                     const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname +
                         '?conversation=' + uuid;
 
-                    // Update the URL without reloading the page
                     history.pushState({
                         path: newUrl
                     }, '', newUrl);
                 }
             }
 
+            function callToaster(message, title, type) {
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": true,
+                    "progressBar": false,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                };
+
+                toastr.success(message, title);
+
+            }
 
             suggestedButtons.forEach(button => {
                 button.disabled = true;
             });
 
-            let extractDocText = '';
-
             fileDropArea.addEventListener('click', () => {
                 if (window.location.href !== targetUrl) {
-                    // confirm("Are you sure you want to Start a new chat");
                     setTimeout(() => {
                         window.location.href = targetUrl;
                     }, 100);
@@ -265,11 +278,8 @@
                 } else {
                     fileInput.click();
                 }
-
-
             });
 
-            // Drag and Drop functionality
             fileDropArea.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 fileDropArea.classList.add('drag-over');
@@ -290,7 +300,6 @@
                 }
             });
 
-            // File input change event
             fileInput.addEventListener('change', (event) => {
                 const files = event.target.files;
                 if (!hasReset) { // Only update URL if it hasn't been reset
@@ -322,7 +331,6 @@
                 offcanvasFileInput.click(); // Trigger the hidden offcanvas-specific file input
             });
 
-            // Handle file selection for the independent file input
             offcanvasFileInput.addEventListener('change', (event) => {
                 const files = event.target.files;
                 if (files.length > 0) {
@@ -361,12 +369,10 @@
                 }
             }
 
-            // Function to handle files
             async function handleFiles(files) {
                 if (files.length > 0) {
                     try {
                         const file = files[0];
-
                         fileName = file.name;
 
                         if (activeConversation === null || activeConversation === false) {
@@ -374,15 +380,12 @@
                             toBStoredConversation.created_at = Date.now();
                         }
 
-                        // Show the file name as a message in the user's chat bubble
                         addMessage(`Uploaded file: ${file.name}`, 'user-message', 'user');
 
-                        // Proceed to upload and summarize the file
                         await summarizedTextResponse(file);
                         if (window.innerWidth >= 992) {
                             chatAction.classList.replace('d-none', 'd-flex');
                         }
-
                         submitButton.disabled = false;
 
                         suggestedButtons.forEach(button => {
@@ -400,13 +403,10 @@
                 }
             }
 
-            // Function to get and display summarized text response
             async function summarizedTextResponse(file) {
                 try {
                     const formData = new FormData();
                     formData.append('pdf', file);
-
-                    // Show typing indicator while the API processes the file
                     showTypingIndicator();
 
                     const response = await fetch(
@@ -414,7 +414,6 @@
                             method: 'POST',
                             body: formData
                         });
-
 
                     removeTypingIndicator(); // Remove typing indicator once response is received
 
@@ -424,9 +423,7 @@
 
                     const result = await response.json();
                     extractDocText = result.extracted_text;
-
                     toBStoredConversation.extracted_text = extractDocText;
-
                     storeExtractedTextInSession(extractDocText);
 
                     if (result.summary) {
@@ -434,7 +431,6 @@
                     } else {
                         simulateTypingEffect("Unable to summarize the document. Please try another file.");
                     }
-
                 } catch (error) {
                     console.error('Error uploading file:', error);
                     removeTypingIndicator(); // Ensure the typing indicator is removed even on error
@@ -443,7 +439,6 @@
                 }
             }
 
-            // Function to handle form submit event
             chatForm.addEventListener('submit', async (e) => {
                 e.preventDefault(); // Prevent the form from refreshing the page
 
@@ -464,7 +459,6 @@
                 }
             });
 
-            // Function to handle chat request
             async function handleChatRequest() {
                 try {
                     const response = await fetch('/get-extracted-text');
@@ -474,13 +468,9 @@
                     }
 
                     const result = await response.json();
-
                     extractDocText = result.extracted_text;
-
-                    // Show typing indicator while the bot is "thinking"
                     showTypingIndicator();
 
-                    // Send the query to the API
                     const apiResponse = await fetch(
                         'http://62.171.163.137:8055/api/text_with_query/', {
                             method: 'POST',
@@ -501,13 +491,11 @@
 
                     const apiResult = await apiResponse.json();
 
-                    // Check if the result contains a valid answer
                     if (apiResult.answer) {
                         simulateTypingEffect(apiResult);
                     } else {
                         simulateTypingEffect("Sorry, I couldn't find an answer to your query. Please try again.");
                     }
-
                 } catch (error) {
                     console.error('Error:', error);
                     removeTypingIndicator(); // Remove typing indicator even on error
@@ -553,8 +541,6 @@
 
             }
 
-
-            // Show typing indicator for bot response
             function showTypingIndicator() {
                 const typingDiv = document.createElement('div');
                 typingDiv.classList.add('chat-bubble', 'bot-message');
@@ -569,7 +555,6 @@
                 chatWindow.scrollTop = chatWindow.scrollHeight;
             }
 
-            // Remove typing indicator
             function removeTypingIndicator() {
                 const typingDiv = document.getElementById('typing-indicator');
                 if (typingDiv) {
@@ -577,7 +562,6 @@
                 }
             }
 
-            // Escape HTML special characters to avoid rendering HTML tags
             function escapeHtml(html) {
                 const text = document.createTextNode(html);
                 const div = document.createElement('div');
@@ -585,7 +569,6 @@
                 return div.innerHTML;
             }
 
-            // Simulate typing effect for bot response
             function simulateTypingEffect(responseText) {
                 const suggestedQueries = responseText.suggested_queries || [];
 
@@ -606,7 +589,6 @@
                     "Sorry, something went wrong. Please try again.";
                 let formattedText = textFormation(responseTextContent);
 
-                // Add text content to textDiv
                 let tempDiv = document.createElement("div");
                 tempDiv.innerHTML = formattedText;
                 let nodes = Array.from(tempDiv.childNodes);
@@ -616,26 +598,19 @@
 
                 contentDiv.appendChild(textDiv);
 
-                // Create a copy button
                 const copyButton = document.createElement('button');
                 copyButton.classList.add('btn', 'btn-outline-secondary', 'copy-btn', 'ml-4');
 
-                // Create the Font Awesome icon
                 const icon = document.createElement('i');
                 icon.classList.add('fas', 'fa-copy'); // Add Font Awesome classes for the copy icon
-                // Append the icon to the button
                 copyButton.appendChild(icon);
-
-                // Set button attributes (optional)
                 copyButton.setAttribute('aria-label', 'Copy to clipboard');
                 copyButton.onclick = function() {
                     copyToClipboard(textDiv.id); // Call the copy function with the generated textDiv ID
                 };
 
-                // Append the textDiv and copyButton to the content container
                 contentDiv.appendChild(copyButton);
 
-                // Append the avatar and content container to the messageDiv
                 messageDiv.appendChild(avatar);
                 messageDiv.appendChild(contentDiv);
 
@@ -644,7 +619,6 @@
 
                 addMessage(formattedText, 'bot-message', 'bot');
 
-                // Create a blinking cursor element
                 const cursor = document.createElement('span');
                 cursor.classList.add('blinking-cursor');
                 textDiv.appendChild(cursor);
@@ -656,9 +630,7 @@
                         index++;
                         setTimeout(typeNextNode, 200); // Adjust the delay (50ms)
                     } else {
-                        // Once typing is complete, remove the cursor
                         cursor.remove();
-                        // Show the suggested queries one by one
                         showSuggestedQueries(suggestedQueries, textDiv);
                     }
                 }
@@ -666,7 +638,6 @@
                 typeNextNode(); // Start typing
             }
 
-            // Copy to Clipboard function
             function copyToClipboard(elementId) {
                 const textToCopy = document.getElementById(elementId).innerText;
                 const textarea = document.createElement('textarea');
@@ -675,27 +646,7 @@
                 textarea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textarea);
-
-                // showToast('Copied to clipboard!'); // Show toast instead of alert
-                toastr.options = {
-                    "closeButton": false,
-                    "debug": false,
-                    "newestOnTop": true,
-                    "progressBar": false,
-                    "positionClass": "toast-top-right",
-                    "preventDuplicates": false,
-                    "onclick": null,
-                    "showDuration": "300",
-                    "hideDuration": "1000",
-                    "timeOut": "5000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
-                };
-
-                toastr.success("Copied to clipboard!", "Action");
+                callToaster("Copied to clipboard!", "Action", "primary");
             }
 
             function showSuggestedQueries(queries, container) {
@@ -719,12 +670,10 @@
                             handleQuestionClick(textBtn.innerText);
                         });
 
-                        // Append the button to the container
                         container.appendChild(textBtn);
                         chatWindow.scrollTop = chatWindow.scrollHeight;
 
                         queryIndex++;
-                        // Add delay before showing the next button
                         setTimeout(displayNextQuery, 300); // Adjust the delay (300ms) as needed
                     }
                 }
@@ -734,7 +683,6 @@
                 }
             }
 
-            // Text formatting function
             function textFormation(responseText) {
                 let formattedSummary = responseText
                     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold text
@@ -771,18 +719,15 @@
                 const urlParams = new URLSearchParams(window.location.search);
                 const conversationId = urlParams.get('conversation');
 
-
-
-                // If there's a conversation ID, load the conversation page
                 if (conversationId) {
                     let conversationData = localStorage.getItem("history-" + conversationId);
                     let handledConversation = JSON.parse(conversationData);
 
                     activeConversation = true;
                     toBStoredConversation.title = handledConversation.title;
-                    displayMessagesInChatWindow(handledConversation.messages, conversationId); // Assume this is a function you implement to load the conversation
+                    displayMessagesInChatWindow(handledConversation.messages,
+                    conversationId); // Assume this is a function you implement to load the conversation
                 } else {
-                    // If not on the target URL, redirect to it
                     if (window.location.href !== targetUrl) {
                         window.location.href = targetUrl; // Redirect only if not already on the target URL
                     }
@@ -791,29 +736,23 @@
 
             function resetConversation() {
                 hasReset = true;
-
-                // Reset the URL to its base without any parameters
                 const baseUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
                 history.replaceState({}, document.title, baseUrl);
 
-                // Perform a page reload or any additional reset logic here if needed
                 window.location.reload(); // This reloads the page
             }
 
-            // Attach event listener to the reset button
             document.getElementById('resetConversationBtn').addEventListener('click', function(e) {
                 e.preventDefault(); // Prevent default behavior
                 resetConversation(); // Call the reset function
             });
 
-            // Attach event listener to the "Reset Chat" section
             document.getElementById('resetChatSection').addEventListener('click', function(e) {
                 e.preventDefault(); // Prevent default behavior
                 resetConversation(); // Call the reset function
             });
 
             function handleSidebarItemClick(conversationId, element) {
-                // Retrieve the conversation data from localStorage
                 let conversationData = localStorage.getItem("history-" + conversationId);
 
                 if (conversationData) {
@@ -826,12 +765,10 @@
                     userInput.value = ''; // Clear input field for new messages
                     handledConversation.id = conversationId; // Set the current conversation id for future messages
 
-                    // Remove the selected class from all items
                     document.querySelectorAll('.list-item').forEach(item => {
                         item.classList.remove('selected'); // Assuming you add a CSS class for selected items
                     });
 
-                    // Add the selected class to the clicked item
                     element.classList.add('selected');
                 }
             }
@@ -867,10 +804,11 @@
                     `;
                     chatWindow.innerHTML += messageHtml; // Append each message to the chat window
                 });
-
                 chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to the bottom
-
                 submitButton.disabled = false;
+                if (window.innerWidth >= 992) {
+                    chatAction.classList.replace('d-none', 'd-flex');
+                }
 
                 suggestedButtons.forEach(button => {
                     button.disabled = false;
@@ -888,25 +826,7 @@
                 textarea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textarea);
-                toastr.options = {
-                    "closeButton": false,
-                    "debug": false,
-                    "newestOnTop": true,
-                    "progressBar": false,
-                    "positionClass": "toast-top-right",
-                    "preventDuplicates": false,
-                    "onclick": null,
-                    "showDuration": "300",
-                    "hideDuration": "1000",
-                    "timeOut": "5000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
-                };
-
-                toastr.success("URL copied to share!", "Action");
+                callToaster("URL copied to share!", "Action");
             }
         </script>
     @endpush
