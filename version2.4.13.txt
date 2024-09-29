@@ -80,3 +80,7 @@ V2.4.13
 
 1. Some designs are changed.
 2. Now data are storing again.
+
+V2.4.14
+
+1. Now we can store file to summarize in the future.

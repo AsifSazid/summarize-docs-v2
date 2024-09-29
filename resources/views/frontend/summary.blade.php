@@ -183,6 +183,14 @@
                 extracted_text: '',
             };
 
+            let toBStoredFileHistory = {
+                id: '',
+                created_at: '',
+                updated_at: '',
+                extracted_text: '',
+                file_name: '',
+            };
+
             let activeConversation = null;
             const fileDropArea = document.getElementById('file-upload');
             const fileInput = document.getElementById('fileInput');
@@ -200,6 +208,7 @@
             const targetUrl = window.location.origin + '/get-summary';
             let hasReset = false;
             let extractDocText = '';
+
 
             window.addEventListener('load', () => {
                 hasReset = false; // Reset the state when the page loads
@@ -261,8 +270,15 @@
                     "hideMethod": "fadeOut"
                 };
 
-                toastr.success(message, title);
-
+                if (type == "error") {
+                    toastr.error(message, title);
+                } else if (type == "warning") {
+                    toastr.warning(message, title);
+                } else if (type == "info") {
+                    toastr.info(message, title);
+                } else {
+                    toastr.success(message, title);
+                }
             }
 
             suggestedButtons.forEach(button => {
@@ -270,6 +286,21 @@
             });
 
             fileDropArea.addEventListener('click', () => {
+                if (authUser) {
+                    if (historyCount >= 10) {
+                        callToaster(
+                            "You have reached the maximum number of PDF summaries. Please log in if you'd like to process more.",
+                            "Maximum Limit Reached!", "warning");
+                        return;
+                    }
+                } else {
+                    if (historyCount >= 5) {
+                        callToaster(
+                            "You have reached the maximum number of PDF summaries. Please log in if you'd like to process more.",
+                            "Maximum Limit Reached!", "warning");
+                        return;
+                    }
+                }
                 if (window.location.href !== targetUrl) {
                     setTimeout(() => {
                         window.location.href = targetUrl;
@@ -331,15 +362,46 @@
                 offcanvasFileInput.click(); // Trigger the hidden offcanvas-specific file input
             });
 
-            offcanvasFileInput.addEventListener('change', (event) => {
+            offcanvasFileInput.addEventListener('change', async (event) => {
                 const files = event.target.files;
                 if (files.length > 0) {
-                    const selectedFile = files[0].name; // Get the selected file name
-                    alert(`${selectedFile} is selected`); // Display the message with file name
+                    const selectedFile = files[0].name;
+                    alert(`${selectedFile} is selected`);
+
+                    let fileHistoryId = generateUUID();
+                    const formData = new FormData();
+                    formData.append('pdf', files[0]);
+
+                    try {
+                        const response = await fetch(
+                            'http://62.171.163.137:8055/api/pdf_to_summary/', {
+                                method: 'POST',
+                                body: formData
+                            });
+
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+
+                        const result = await response.json();
+                        const extractDocText = result.extracted_text;
+
+                        const toBStoredFileHistory = {
+                            id: fileHistoryId,
+                            created_at: new Date().toISOString(),
+                            file_name: selectedFile,
+                            extracted_text: extractDocText
+                        };
+
+                        localStorage.setItem("fileHistory-" + fileHistoryId, JSON.stringify(toBStoredFileHistory));
+                    } catch (error) {
+                        console.error('Error during file upload:', error);
+                    }
                 } else {
-                    alert('No item selected'); // Notify if no file is selected
+                    alert('No item selected'); 
                 }
             });
+
 
             async function storeExtractedTextInSession(extractDocText) {
                 try {
@@ -515,11 +577,20 @@
                 toBStoredConversation.messages.push(msg); // Add message to the conversation
                 toBStoredConversation.updated_at = Date.now(); // Update the timestamp
 
-                if (localStorage.length <= 5) {
-                    localStorage.setItem("history-" + toBStoredConversation.id, JSON.stringify(toBStoredConversation));
+                if (authUser) {
+                    if (historyCount <= 10) {
+                        localStorage.setItem("history-" + toBStoredConversation.id, JSON.stringify(toBStoredConversation));
+                    } else {
+                        alert("Maximum Limit Reached!");
+                    }
                 } else {
-                    alert("Maximum row count reached.");
+                    if (historyCount <= 5) {
+                        localStorage.setItem("history-" + toBStoredConversation.id, JSON.stringify(toBStoredConversation));
+                    } else {
+                        alert("Maximum Limit Reached!");
+                    }
                 }
+
 
                 adjustProgressBar();
                 renderConversations();
@@ -646,7 +717,7 @@
                 textarea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textarea);
-                callToaster("Copied to clipboard!", "Action", "primary");
+                callToaster("Copied to clipboard!", "Action", "primary", "success");
             }
 
             function showSuggestedQueries(queries, container) {
@@ -826,7 +897,7 @@
                 textarea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textarea);
-                callToaster("URL copied to share!", "Action");
+                callToaster("URL copied to share!", "Action", "success");
             }
 
             function downloadConversation() {

@@ -99,6 +99,135 @@
             color: rgb(255, 255, 255);
             font-weight: 600;
         }
+
+        .__offcanvas-showing-file-section {
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            overflow: auto;
+            margin-bottom: 16px;
+            scrollbar-width: none;
+            scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+        }
+
+        .file-drawer {
+            list-style: none;
+            position: relative;
+            padding: 8px 0px;
+            width: 100%;
+            overflow: auto;
+            margin: 0px;
+            gap: 0px;
+        }
+
+        .file-list {
+            display: flex;
+            -webkit-box-pack: start;
+            justify-content: flex-start;
+            -webkit-box-align: center;
+            align-items: center;
+            position: relative;
+            text-decoration: none;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: left;
+            cursor: pointer;
+            min-height: 34px;
+            border-radius: 8px;
+        }
+
+        .file-list:hover {
+            background-color: rgb(246, 246, 249);
+        }
+
+        .file-list:hover svg {
+            visibility: visible;
+        }
+
+        .file-list svg {
+            user-select: none;
+            width: 1em;
+            height: 1em;
+            display: inline-block;
+            fill: currentcolor;
+            flex-shrink: 0;
+            font-size: 1.71429rem;
+            transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .file-title {
+            flex: 1 1 auto;
+            min-width: 0px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+
+        .file-title-text {
+            font-family: Inter, sans-serif;
+            font-weight: 400;
+            line-height: 1.7;
+            letter-spacing: 0em;
+            text-overflow: ellipsis;
+            display: block;
+            font-size: 14px;
+            margin: 0px 0px 0px 13px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .file-remove-btn {
+            display: inline-flex;
+            -webkit-box-align: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            justify-content: center;
+            position: relative;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            background-color: transparent;
+            cursor: pointer;
+            user-select: none;
+            vertical-align: middle;
+            appearance: none;
+            text-align: center;
+            font-size: 1.71429rem;
+            color: rgba(0, 0, 0, 0.54);
+            visibility: hidden;
+            outline: 0px;
+            border-width: 0px;
+            border-style: initial;
+            border-color: initial;
+            border-image: initial;
+            margin: 0px;
+            text-decoration: none;
+            flex: 0 0 auto;
+            border-radius: 50%;
+            overflow: visible;
+            transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0px;
+        }
+
+        .file-remove-btn svg {
+            user-select: none;
+            width: 1em;
+            height: 1em;
+            display: inline-block;
+            fill: currentcolor;
+            flex-shrink: 0;
+            visibility: hidden;
+            font-size: 18px;
+            color: rgb(158, 158, 158);
+            transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .file-remove-btn span {
+            overflow: hidden;
+            pointer-events: none;
+            position: absolute;
+            z-index: 0;
+            inset: 0px;
+            border-radius: inherit;
+        }
     </style>
 </head>
 
@@ -298,6 +427,34 @@
                     <p class="MuiTypography-root MuiTypography-body2 css-bbya65">Add New File</p>
                     <input id="offcanvasFileInput" type="file" accept="application/pdf" style="display: none;">
                 </div>
+                <div class="__offcanvas-showing-file-section">
+                    <ul class="__showing-file-section file-drawer">
+                        {{-- <li class="__file-drawer file-list">
+                            <svg class="__file-list list-svg" focusable="false" aria-hidden="true"
+                                viewBox="0 0 24 24" data-testid="DescriptionOutlinedIcon"
+                                style="font-size: 18px; color: rgb(71, 93, 145);">
+                                <path
+                                    d="M8 16h8v2H8zm0-4h8v2H8zm6-10H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8zm4 18H6V4h7v5h5z">
+                                </path>
+                            </svg>
+                            <div class="__file-list file-title">
+                                <span class="__file-title file-title-text">
+                                    conversation-summary (1).pdf
+                                </span>
+                            </div>
+                            <button class="__file-list file-remove-btn" tabindex="0" type="button"
+                                aria-label="Remove from chat">
+                                <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-ogbjj0" focusable="false"
+                                    aria-hidden="true" viewBox="0 0 24 24" data-testid="CloseIcon">
+                                    <path
+                                        d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z">
+                                    </path>
+                                </svg>
+                                <span class="MuiTouchRipple-root css-w0pj6f"></span>
+                            </button>
+                        </li> --}}
+                    </ul>
+                </div>
             </div>
             <div class="offcanvas-footer">
                 <a href="https://1.envato.market/EA4JP" target="_blank"
@@ -376,6 +533,26 @@
     <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
     <script src="{{ asset('assets/js/pages/custom/todo/todo.js') }}"></script>
     <script src="{{ asset('assets/js/pages/features/miscellaneous/toastr.js') }}"></script>
+    <script>
+        let authUser = @json(auth()->user());
+
+        function getHistoryCount() {
+            let count = 0;
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+
+                // Check if the key starts with "history-"
+                if (key.startsWith("history-")) {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        const historyCount = getHistoryCount();
+    </script>
 
     @stack('js')
 
@@ -393,8 +570,6 @@
             let progressBars = document.getElementsByClassName('main-pr-bar'); // Get elements by class name
             let lockSection = document.querySelector('.__aside.lock-section'); // Select lock-section element
 
-            let authUser = @json(auth()->user());
-
             // Initially hide lock-section
             lockSection.classList.remove('active');
 
@@ -405,16 +580,16 @@
                 if (authUser) {
                     if (progressBars.length > 0) {
                         let progressBar = progressBars[0];
-                        dataCountForStorage.innerHTML = localStorage.length;
-                        progressBar.style.width = (localStorage.length) * 10 + '%';
+                        dataCountForStorage.innerHTML = historyCount;
+                        progressBar.style.width = (historyCount) * 10 + '%';
                     } else {
                         console.warn("No elements found with class 'main-pr-bar'.");
                     }
                 } else {
                     if (progressBars.length > 0) {
                         let progressBar = progressBars[0];
-                        dataCountForStorage.innerHTML = localStorage.length;
-                        progressBar.style.width = (localStorage.length) * 20 + '%';
+                        dataCountForStorage.innerHTML = historyCount;
+                        progressBar.style.width = (historyCount) * 20 + '%';
                     } else {
                         console.warn("No elements found with class 'main-pr-bar'.");
                     }
@@ -444,6 +619,22 @@
             }
 
             return allConversations;
+        }
+
+        function getAllUploadedFiles() {
+            let allUploadedFiles = [];
+
+            for (let i = 0; i < localStorage.length; i++) {
+                let key = localStorage.key(i);
+
+                if (key.startsWith("fileHistory-")) {
+                    let uploadedFileData = localStorage.getItem(key);
+                    let allUploadedFile = JSON.parse(uploadedFileData);
+                    allUploadedFiles.push(allUploadedFile);
+                }
+            }
+
+            return allUploadedFiles;
         }
 
         function renderConversations() {
@@ -518,7 +709,82 @@
             }
         }
 
-        // Function to toggle hover effect on click
+        function renderUploadedFiles() {
+            const fileListContainer = document.querySelector('.__showing-file-section.file-drawer');
+
+            if (!fileListContainer) {
+                console.error('File list container not found!');
+                return;
+            }
+
+            let uploadedFileArray = getAllUploadedFiles();
+
+            fileListContainer.innerHTML = '';
+
+            uploadedFileArray.forEach((file) => {
+                // Create the list item (li)
+                const fileListItem = document.createElement('li');
+                fileListItem.className = '__file-drawer file-list';
+
+                const svgIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svgIcon.setAttribute('class', '__file-list list-svg');
+                svgIcon.setAttribute('focusable', 'false');
+                svgIcon.setAttribute('aria-hidden', 'true');
+                svgIcon.setAttribute('viewBox', '0 0 24 24');
+                svgIcon.setAttribute('style', 'font-size: 18px; color: rgb(71, 93, 145);');
+
+                const pathIcon = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                pathIcon.setAttribute('d',
+                    'M8 16h8v2H8zm0-4h8v2H8zm6-10H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8zm4 18H6V4h7v5h5z'
+                    );
+                svgIcon.appendChild(pathIcon);
+
+                const fileTitleDiv = document.createElement('div');
+                fileTitleDiv.className = '__file-list file-title';
+
+                const fileTitleSpan = document.createElement('span');
+                fileTitleSpan.className = '__file-title file-title-text';
+                fileTitleSpan.textContent = file.file_name; // Set the file name from the uploaded file
+
+                fileTitleDiv.appendChild(fileTitleSpan);
+
+                // Create the remove button
+                const removeButton = document.createElement('button');
+                removeButton.className = '__file-list file-remove-btn';
+                removeButton.setAttribute('tabindex', '0');
+                removeButton.setAttribute('type', 'button');
+                removeButton.setAttribute('aria-label', 'Remove from chat');
+
+                const removeSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                removeSvg.setAttribute('class', 'MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-ogbjj0');
+                removeSvg.setAttribute('focusable', 'false');
+                removeSvg.setAttribute('aria-hidden', 'true');
+                removeSvg.setAttribute('viewBox', '0 0 24 24');
+
+                const removePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                removePath.setAttribute('d',
+                    'M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'
+                    );
+                removeSvg.appendChild(removePath);
+
+                removeButton.appendChild(removeSvg);
+
+                // Add remove button functionality
+                removeButton.addEventListener('click', () => {
+                    removeFileFromHistory(file.id); // Assuming a function to remove file
+                    renderUploadedFiles();
+                });
+
+                fileListItem.appendChild(svgIcon);
+                fileListItem.appendChild(fileTitleDiv);
+                fileListItem.appendChild(removeButton);
+
+                fileListContainer.appendChild(fileListItem);
+            });
+        }
+
+
+
         function toggleHover(element) {
             // Remove hover from all items
             document.querySelectorAll('.list-item.hoverable').forEach(item => {
@@ -533,6 +799,7 @@
 
         // Call the render function to display the conversations on page load
         renderConversations();
+        renderUploadedFiles();
     </script>
 
 </body>
