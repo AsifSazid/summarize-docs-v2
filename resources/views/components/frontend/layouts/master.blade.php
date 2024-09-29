@@ -33,6 +33,72 @@
         .list-item.hoverable:hover .delete-btn {
             display: block;
         }
+
+        .single-upgrade-button-title {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            -webkit-box-align: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .single-upgrade-button-des {
+            margin: 0px;
+            font-family: Inter, sans-serif;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 1.3;
+            letter-spacing: 0em;
+            color: rgb(0, 26, 67);
+        }
+
+        .single-upgrade-button-design {
+            pointer-events: none;
+            position: absolute;
+            z-index: 0;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            left: 0px;
+            overflow: hidden;
+            border-radius: inherit;
+        }
+
+        .badge-section {
+            display: inline-flex;
+        }
+
+        .badge-area {
+            background-color: rgb(129, 67, 243);
+            color: rgb(255, 255, 255);
+            -webkit-box-align: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            justify-content: center;
+            border-radius: 4px;
+            display: inline-flex;
+            height: 18px;
+            padding: 8px;
+        }
+
+        .main-badge {
+            display: flex;
+            flex-flow: row;
+            -webkit-box-align: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge-caption {
+            margin: 0px;
+            font-family: Inter, sans-serif;
+            font-size: 12px;
+            line-height: 1.3;
+            letter-spacing: 0em;
+            color: rgb(255, 255, 255);
+            font-weight: 600;
+        }
     </style>
 </head>
 
@@ -57,7 +123,7 @@
                     <div class="aside-brand d-flex flex-column align-items-left flex-column-auto py-5 py-lg-12">
                         <div class="brand flex-column-auto mb-6 __brand_wrapper" id="kt_brand" kt-hidden-height="65"
                             style="">
-                            <a href="{{route('docSummary')}}" class="brand-logo __brand_logo_name">
+                            <a href="{{ route('docSummary') }}" class="brand-logo __brand_logo_name">
                                 <img class="max-h-30px" alt="Logo"
                                     src="{{ asset('assets') }}/media/logos/sharly-logo.webp">
                                 <h2 class="__logo_name" style="margin: 0px !important;">Sharly</h2>
@@ -89,11 +155,11 @@
                     </div>
                     <div
                         class="aside-nav d-flex flex-column align-items-left flex-column-fluid scroll scroll-pull ps ps--active-y">
-                        <p class="p-2 p-lg-3 my-1 my-lg-3 font-size-sm todays-title d-none"><strong>Today</strong></p>
+                        <p class="p-2 p-lg-3 my-1 font-size-sm todays-title d-none"><strong>Today</strong></p>
                         <div class="list today-list"></div>
 
                         <!-- This title will be conditionally hidden -->
-                        <p class="p-2 p-lg-3 my-1 my-lg-3 font-size-sm previous-days-title d-none"><strong>Previous 30
+                        <p class="p-2 p-lg-3 my-1 font-size-sm previous-days-title d-none"><strong>Previous 30
                                 Days</strong></p>
                         <div class="list previous-list"></div>
 
@@ -180,7 +246,7 @@
             </a>
         </li>
     </ul>
-    <div id="kt_demo_panel" class="offcanvas offcanvas-right p-10">
+    <div id="kt_demo_panel" class="offcanvas offcanvas-right p-8">
         <div class="offcanvas-header d-flex align-items-center justify-content-between pb-7">
             <h4 class="font-weight-bold m-0">Tool Bar</h4>
             <a href="#" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_demo_panel_close">
@@ -196,26 +262,25 @@
                             <button class="__upgrade-button-area upgrade-button upgrade-button-selected"
                                 tabindex="0" type="button" value="false" aria-pressed="true"
                                 aria-label="efficient-response-button">
-                                <div class="MuiBox-root css-10uih11">Efficient</div>
-                                <span class="MuiTypography-root MuiTypography-caption css-18czna">Great
+                                <div class="__upgrade-button single-upgrade-button-title">Efficient</div>
+                                <span class="__upgrade-button single-upgrade-button-des">Great
                                     responses</span>
-                                <span class="MuiTouchRipple-root css-w0pj6f"></span>
+                                <span class="__upgrade-button single-upgrade-button-design"></span>
                             </button>
                             <button class="__upgrade-button-area upgrade-button" tabindex="0" type="button"
                                 value="true" aria-pressed="false" aria-label="advance-response-button">
-                                <div class="MuiBox-root css-10uih11">Advanced
-                                    <div class="MuiBox-root css-vxcmzt">
-                                        <div class="MuiBox-root css-1qmwbks">
-                                            <div class="MuiBox-root css-wo8od1">
-                                                <span
-                                                    class="MuiTypography-root MuiTypography-caption css-j55nbm">PRO</span>
+                                <div class="__upgrade-button single-upgrade-button-title">Advanced
+                                    <div class="__single-upgrade-button badge-section">
+                                        <div class="__badge-section badge-area">
+                                            <div class="__badge-area main-badge">
+                                                <span class="__main-badge badge-caption">PRO</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <span class="MuiTypography-root MuiTypography-caption css-18czna">High Accuracy
+                                <span class="__upgrade-button single-upgrade-button-des">High Accuracy
                                     GPT-4</span>
-                                <span class="MuiTouchRipple-root css-w0pj6f"></span>
+                                <span class="__upgrade-button single-upgrade-button-design"></span>
                             </button>
                         </div>
                     </div>

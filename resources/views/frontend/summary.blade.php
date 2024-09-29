@@ -505,21 +505,21 @@
             }
 
             function addMessage(message, className, sender) {
-                // const msg = {
-                //     conversation_id: toBStoredConversation.id,
-                //     timestamp: Date.now(),
-                //     sender: sender,
-                //     text: message
-                // };
+                const msg = {
+                    conversation_id: toBStoredConversation.id,
+                    timestamp: Date.now(),
+                    sender: sender,
+                    text: message
+                };
 
-                // toBStoredConversation.messages.push(msg); // Add message to the conversation
-                // toBStoredConversation.updated_at = Date.now(); // Update the timestamp
+                toBStoredConversation.messages.push(msg); // Add message to the conversation
+                toBStoredConversation.updated_at = Date.now(); // Update the timestamp
 
-                // if (localStorage.length < 5) {
-                //     localStorage.setItem("history-" + toBStoredConversation.id, JSON.stringify(toBStoredConversation));
-                // } else {
-                //     alert("Maximum row count reached.");
-                // }
+                if (localStorage.length <= 5) {
+                    localStorage.setItem("history-" + toBStoredConversation.id, JSON.stringify(toBStoredConversation));
+                } else {
+                    alert("Maximum row count reached.");
+                }
 
                 adjustProgressBar();
                 renderConversations();
