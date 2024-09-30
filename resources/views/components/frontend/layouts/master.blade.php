@@ -597,9 +597,7 @@
             }, 500); // Delay to simulate loading, adjust as needed
         }
 
-
         adjustProgressBar();
-
 
         // Run on page load and window resize
         window.addEventListener('load', adjustPadding);
@@ -721,7 +719,7 @@
 
             fileListContainer.innerHTML = '';
 
-            uploadedFileArray.forEach((file) => {
+            uploadedFileArray.forEach((uploadedFile) => {
                 // Create the list item (li)
                 const fileListItem = document.createElement('li');
                 fileListItem.className = '__file-drawer file-list';
@@ -736,7 +734,7 @@
                 const pathIcon = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                 pathIcon.setAttribute('d',
                     'M8 16h8v2H8zm0-4h8v2H8zm6-10H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8zm4 18H6V4h7v5h5z'
-                    );
+                );
                 svgIcon.appendChild(pathIcon);
 
                 const fileTitleDiv = document.createElement('div');
@@ -744,7 +742,11 @@
 
                 const fileTitleSpan = document.createElement('span');
                 fileTitleSpan.className = '__file-title file-title-text';
-                fileTitleSpan.textContent = file.file_name; // Set the file name from the uploaded file
+                fileTitleSpan.textContent = uploadedFile.file_name;
+
+                fileTitleSpan.addEventListener('click', () => {
+                    startChatWithThisFile(uploadedFile);
+                });
 
                 fileTitleDiv.appendChild(fileTitleSpan);
 
@@ -764,7 +766,7 @@
                 const removePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                 removePath.setAttribute('d',
                     'M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'
-                    );
+                );
                 removeSvg.appendChild(removePath);
 
                 removeButton.appendChild(removeSvg);
@@ -783,7 +785,51 @@
             });
         }
 
+        async function startChatWithThisFile(uploadedFile) {
+            try {
+                console.log(activeConversation);
+                if (!hasReset) { // Only update URL if it hasn't been reset
+                    updateURLWithUUID(); // Update the URL here after file upload
+                }
 
+                if (activeConversation === null || activeConversation === false) {
+                    toBStoredConversation.title = uploadedFile.file_name;
+                    toBStoredConversation.created_at = Date.now();
+                }
+
+                addMessage(`Uploaded file: ${uploadedFile.file_name}`, 'user-message', 'user');
+
+                extractDocText = uploadedFile.extracted_text;
+                toBStoredConversation.extracted_text = extractDocText;
+                storeExtractedTextInSession(extractDocText);
+
+                showTypingIndicator();
+
+                removeTypingIndicator();
+
+                if (uploadedFile) {
+                    simulateTypingEffect(uploadedFile.first_response);
+                } else {
+                    simulateTypingEffect("Sorry, I couldn't find an answer to your query. Please try again.");
+                }
+                if (window.innerWidth >= 992) {
+                    chatAction.classList.replace('d-none', 'd-flex');
+                }
+                submitButton.disabled = false;
+
+                suggestedButtons.forEach(button => {
+                    button.disabled = false;
+                });
+
+                titleChange(uploadedFile.file_name);
+            } catch (error) {
+                console.error('Error:', error);
+                removeTypingIndicator(); // Remove typing indicator even on error
+                const errorMessage = "Sorry, something went wrong while sending the message. Please try again.";
+                simulateTypingEffect(errorMessage);
+            }
+
+        }
 
         function toggleHover(element) {
             // Remove hover from all items
@@ -795,9 +841,6 @@
             element.classList.add('hover');
         }
 
-
-
-        // Call the render function to display the conversations on page load
         renderConversations();
         renderUploadedFiles();
     </script>

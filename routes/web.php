@@ -37,5 +37,6 @@ Route::get('/get-summary', [SummaryDocsController::class, 'index'])->name('docSu
 Route::get('/get-extracted-text', [SummaryDocsController::class, 'getExtractedText'])->name('getExtractedText');
 Route::post('/store-extracted-text', [SummaryDocsController::class, 'storeExtractedText'])->name('storeExtractedText');
 
+Route::get('/invoice-ocr', [SummaryDocsController::class, 'index'])->name('docSummary');
 
 require __DIR__.'/auth.php';
