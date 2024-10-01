@@ -8,7 +8,7 @@ use Mpdf\Mpdf;
 class SummaryDocsController extends Controller
 {
     public function index(){
-        return view('frontend.summary');
+        return view('frontend.pdf-summary.summary');
     }
 
     public function getExtractedText()
@@ -49,7 +49,7 @@ class SummaryDocsController extends Controller
 
 
         if ($conversationData) {
-            $preview = view('frontend.summary-pdf', compact('title', 'messages'));
+            $preview = view('frontend.pdf-summary.summary-pdf', compact('title', 'messages'));
             $generatedTime = date('d M Y H:i:s A');
             $mpdf = new \Mpdf\Mpdf();
             $mpdf->autoScriptToLang = true;

@@ -5,7 +5,7 @@
     <base href="../../../">
     <meta charset="utf-8" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Tasks | Keenthemes</title>
+    <title>Tappware | PDF Summarizer</title>
     <meta name="description" content="Tasks management" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link rel="canonical" href="https://keenthemes.com/metronic" />
@@ -988,38 +988,52 @@
             }
         }
 
+        function getBase64(file) {
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function() {
+                console.log(reader.result);
+            };
+            reader.onerror = function(error) {
+                console.log('Error: ', error);
+            };
+        }
+
         async function handleFiles(files) {
-            if (files.length > 0) {
+            // if (files.length > 0) {
                 try {
                     const file = files[0];
-                    fileName = file.name;
 
-                    if (activeConversation === null || activeConversation === false) {
-                        toBStoredConversation.title = fileName;
-                        toBStoredConversation.created_at = Date.now();
-                    }
+                    getBase64(file); // prints the base64 string
 
-                    addMessage(`Uploaded file: ${file.name}`, 'user-message', 'user');
+                    // fileName = file.name;
 
-                    await summarizedTextResponse(file);
-                    if (window.innerWidth >= 992) {
-                        chatAction.classList.replace('d-none', 'd-flex');
-                    }
-                    submitButton.disabled = false;
+                    // if (activeConversation === null || activeConversation === false) {
+                    //     toBStoredConversation.title = fileName;
+                    //     toBStoredConversation.created_at = Date.now();
+                    // }
 
-                    suggestedButtons.forEach(button => {
-                        button.disabled = false;
-                    });
+                    // addMessage(`Uploaded file: ${file.name}`, 'user-message', 'user');
 
-                    titleChange(fileName);
+                    // await summarizedTextResponse(file);
+                    // if (window.innerWidth >= 992) {
+                    //     chatAction.classList.replace('d-none', 'd-flex');
+                    // }
+                    // submitButton.disabled = false;
+
+                    // suggestedButtons.forEach(button => {
+                    //     button.disabled = false;
+                    // });
+
+                    // titleChange(fileName);
                 } catch (error) {
                     console.error('Error:', error);
                     const errorMessage = "Sorry, something went wrong while processing the file. Please try again.";
                     simulateTypingEffect(errorMessage);
                 }
-            } else {
-                alert('No files selected');
-            }
+            // } else {
+            //     alert('No files selected');
+            // }
         }
 
         async function summarizedTextResponse(file) {
@@ -1172,11 +1186,11 @@
             const typingDiv = document.createElement('div');
             typingDiv.classList.add('chat-bubble', 'bot-message');
             typingDiv.innerHTML = `
-            <img src="assets/media/chatbot/ai-chatbot-4.png" class="chat-avatar">
-            <span class="typing-indicator"></span>
-            <span class="typing-indicator"></span>
-            <span class="typing-indicator"></span>
-        `;
+                                <img src="assets/media/chatbot/ai-chatbot-4.png" class="chat-avatar">
+                                <span class="typing-indicator"></span>
+                                <span class="typing-indicator"></span>
+                                <span class="typing-indicator"></span>
+                            `;
             typingDiv.id = 'typing-indicator'; // Add ID for easy removal
             chatWindow.appendChild(typingDiv);
             chatWindow.scrollTop = chatWindow.scrollHeight;
