@@ -339,12 +339,12 @@
     border-bottom-right-radius: 0px !important;
 }
 
-/* .upgrade-button-area button {
+.upgrade-button-area button:nth-child(2) {
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
-} */
+}
 
 .upgrade-button-area button:last-child {
     border-top-left-radius: 0px !important;

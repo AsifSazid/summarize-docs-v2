@@ -32,8 +32,6 @@
         .content-container:hover .copy-btn {
             display: block;
         }
-    </style>
-    <style>
         .sidebar-title {
             cursor: pointer;
         }
@@ -565,25 +563,21 @@
                             style="width: 100%;">
                             <button class="__upgrade-button-area upgrade-button upgrade-button-selected"
                                 tabindex="0" type="button" value="false" aria-pressed="true"
-                                aria-label="efficient-response-button">
+                                aria-label="efficient-response-button" data-btn-value="gemini">
                                 <div class="__upgrade-button single-upgrade-button-title">Efficient</div>
-                                <span class="__upgrade-button single-upgrade-button-des">Great
-                                    responses</span>
+                                <span class="__upgrade-button single-upgrade-button-des">Gemini Response</span>
                                 <span class="__upgrade-button single-upgrade-button-design"></span>
                             </button>
                             <button class="__upgrade-button-area upgrade-button" tabindex="0" type="button"
-                                value="true" aria-pressed="false" aria-label="advance-response-button">
-                                <div class="__upgrade-button single-upgrade-button-title">Advanced
-                                    <div class="__single-upgrade-button badge-section">
-                                        <div class="__badge-section badge-area">
-                                            <div class="__badge-area main-badge">
-                                                <span class="__main-badge badge-caption">PRO</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <span class="__upgrade-button single-upgrade-button-des">High Accuracy
-                                    GPT-4</span>
+                                value="true" aria-pressed="false" aria-label="advance-response-button" data-btn-value="openai">
+                                <div class="__upgrade-button single-upgrade-button-title">Advanced</div>
+                                <span class="__upgrade-button single-upgrade-button-des">High Accuracy with GPT-4</span>
+                                <span class="__upgrade-button single-upgrade-button-design"></span>
+                            </button>
+                            <button class="__upgrade-button-area upgrade-button" tabindex="0" type="button"
+                                value="true" aria-pressed="false" aria-label="advance-response-button" data-btn-value="huggingface">
+                                <div class="__upgrade-button single-upgrade-button-title">Pro</div>
+                                <span class="__upgrade-button single-upgrade-button-des">Hugging Face</span>
                                 <span class="__upgrade-button single-upgrade-button-design"></span>
                             </button>
                         </div>
@@ -764,6 +758,7 @@
         const targetUrl = window.location.origin + '/get-summary';
         let hasReset = false;
         let extractDocText = '';
+        let model = document.querySelector('.upgrade-button-selected').getAttribute('data-btn-value');
 
 
         window.addEventListener('load', () => {
@@ -1001,36 +996,36 @@
 
         async function handleFiles(files) {
             // if (files.length > 0) {
-                try {
-                    const file = files[0];
+            try {
+                const file = files[0];
 
-                    getBase64(file); // prints the base64 string
+                getBase64(file); // prints the base64 string
 
-                    // fileName = file.name;
+                fileName = file.name;
 
-                    // if (activeConversation === null || activeConversation === false) {
-                    //     toBStoredConversation.title = fileName;
-                    //     toBStoredConversation.created_at = Date.now();
-                    // }
-
-                    // addMessage(`Uploaded file: ${file.name}`, 'user-message', 'user');
-
-                    // await summarizedTextResponse(file);
-                    // if (window.innerWidth >= 992) {
-                    //     chatAction.classList.replace('d-none', 'd-flex');
-                    // }
-                    // submitButton.disabled = false;
-
-                    // suggestedButtons.forEach(button => {
-                    //     button.disabled = false;
-                    // });
-
-                    // titleChange(fileName);
-                } catch (error) {
-                    console.error('Error:', error);
-                    const errorMessage = "Sorry, something went wrong while processing the file. Please try again.";
-                    simulateTypingEffect(errorMessage);
+                if (activeConversation === null || activeConversation === false) {
+                    toBStoredConversation.title = fileName;
+                    toBStoredConversation.created_at = Date.now();
                 }
+
+                addMessage(`Uploaded file: ${file.name}`, 'user-message', 'user');
+
+                await summarizedTextResponse(file);
+                if (window.innerWidth >= 992) {
+                    chatAction.classList.replace('d-none', 'd-flex');
+                }
+                submitButton.disabled = false;
+
+                suggestedButtons.forEach(button => {
+                    button.disabled = false;
+                });
+
+                titleChange(fileName);
+            } catch (error) {
+                console.error('Error:', error);
+                const errorMessage = "Sorry, something went wrong while processing the file. Please try again.";
+                simulateTypingEffect(errorMessage);
+            }
             // } else {
             //     alert('No files selected');
             // }
@@ -1793,6 +1788,20 @@
             // Add hover effect to the clicked item
             element.classList.add('hover');
         }
+
+        const upgradeButtons = document.querySelectorAll('.upgrade-button');
+
+        upgradeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                upgradeButtons.forEach(btn => {
+                    btn.classList.remove('upgrade-button-selected');
+                });
+
+                this.classList.add('upgrade-button-selected');
+
+                model = document.querySelector('.upgrade-button-selected').getAttribute('data-btn-value');
+            });
+        });
 
         renderConversations();
         renderUploadedFiles();
