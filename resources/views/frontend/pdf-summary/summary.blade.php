@@ -1035,10 +1035,12 @@
             try {
                 const formData = new FormData();
                 formData.append('pdf', file);
+                formData.append('model', model);
                 showTypingIndicator();
 
                 const response = await fetch(
-                    'http://62.171.163.137:8055/api/pdf_to_summary/', { // Replace with your API URL
+                    // 'http://62.171.163.137:8055/api/pdf_to_summary/', { // live link
+                    'http://192.168.10.185:8080/api/pdf_to_summary', { // local link
                         method: 'POST',
                         body: formData
                     });
@@ -1100,14 +1102,16 @@
                 showTypingIndicator();
 
                 const apiResponse = await fetch(
-                    'http://62.171.163.137:8055/api/text_with_query/', {
+                    // 'http://62.171.163.137:8055/api/text_with_query/', { // live link
+                    'http://192.168.10.185:8080/api/text_with_query', { //local link
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
                             text: extractDocText,
-                            query: userMessage
+                            query: userMessage,
+                            model: model
                         })
                     });
 
