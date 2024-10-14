@@ -688,7 +688,7 @@
                     "gray-300": "#E5EAEE",
                     "gray-400": "#D6D6E0",
                     "gray-500": "#B5B5C3",
-                    "gray-600": "#80808F",
+                    "gray-600": "#80008F",
                     "gray-700": "#464E5F",
                     "gray-800": "#1B283F",
                     "gray-900": "#212121"
@@ -1040,7 +1040,7 @@
 
                 const response = await fetch(
                     // 'http://62.171.163.137:8055/api/pdf_to_summary/', { // live link
-                    'http://192.168.10.185:8080/api/pdf_to_summary', { // local link
+                    'http://192.168.10.185:8000/api/pdf_to_summary', { // lo1cal link
                         method: 'POST',
                         body: formData
                     });
@@ -1103,7 +1103,7 @@
 
                 const apiResponse = await fetch(
                     // 'http://62.171.163.137:8055/api/text_with_query/', { // live link
-                    'http://192.168.10.185:8080/api/text_with_query', { //local link
+                    'http://192.168.10.185:8000/api/text_with_query', { //local link
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
