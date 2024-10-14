@@ -27,8 +27,8 @@ Ensure you have the following installed:
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/your-repo/tapp-summarizer.git
-   cd tapp-summarizer
+   git clone https://github.com/your-repo/summarize-docs-v2.git
+   cd summarize-docs-v2
    ```
 
 2. **Install Dependencies:**
@@ -83,5 +83,40 @@ Ensure you have the following installed:
 - **Guest Mode:** Users can use the summarizer in guest mode, but only up to 5 PDFs.
 - **Sign Up/Login:** Register or log in to access more features and increase the limit to 10 PDFs.
 
+## Configuration
+### Environment Variables
+Make sure the following values are set in your .env file:
+```env
+APP_NAME="Docs Summarizer"
+APP_ENV=local
+APP_KEY=base64:"generated-key"
+APP_DEBUG=true
+APP_URL=http://localhost
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=[your-database]
+DB_USERNAME=[your-username]
+DB_PASSWORD=[your-password]
+
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS=null
+MAIL_FROM_NAME="${APP_NAME}"
+```
+Make sure to replace the placeholders with your actual credentials and settings.
+
 ## License
 This project is developed by [Asif Mostofa Sazid](https://bd.linkedin.com/in/asifsazid) under the supervision of [Tappware Solution Ltd](https://tappware.com/) and is licensed under [MIT license](https://opensource.org/licenses/MIT). For more information, please refer to the LICENSE file in this repository.
+
+-------------------------------------------------------------------------------------------------------------
+Enjoy using Tapp-Summarizer to make your PDF summarization tasks quicker and easier!
+```JavaScript
+
+This is a complete `README.md` that is ready for use in your Laravel project. It includes all necessary sections like installation, usage, environment configuration, and contribution guidelines. You can customize the placeholders like `your-repo`, `your-database`, and `Your Name` as needed!
+```
